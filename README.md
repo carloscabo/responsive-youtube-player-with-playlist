@@ -1,12 +1,14 @@
 Responsive YouTube Player with Playlist
 =======================================
 
+![Screenshot](https://raw.githubusercontent.com/carloscabo/responsive-youtube-player-with-playlist/master/screenshot.png)
+
 **(RYPP)** Responsive YouTube Player with Playlist, title is self-explanatory ;-)
 
 ## Requirements
 
-`Jquery (1.9.1+)`
-`RYPP.js`
+`Jquery (1.9.1+)`  
+`RYPP.js`  
 `RYPP.css`
 
 ## TO-DO / Known issues
