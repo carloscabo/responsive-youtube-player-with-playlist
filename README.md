@@ -48,9 +48,13 @@ Aspect ratio of the YouTube video, valid values are `2:1`, `4:3` and `16:9` (def
 
 `data-playlist="PL2591DC20C4BB4D78"`
 
-ID of the YouTube playlist, RYPP will automatically get its data and thumbnails and populate the list on the riaght with them.
+ID of the YouTube playlist, RYPP will automatically get its data and thumbnails and populate the list on the riaght with them. Take a look to `demo-playlist.htm`.
 
 `data-ids="hWGUnrIiOoI,7nXcLBXR70M"`
 
-Alternativelly to the playlist you can provide a lista of **comma-separated ids** of the YouTube vídeos you want to add to the playlist.
+Alternativelly to the playlist you can provide a lista of **comma-separated ids** of the YouTube vídeos you want to add to the playlist. Take a look to `demo-id-list.htm`.
+
+## Manual / 'hardcoded'
+
+You can also _prefill_ the playlist with some _harcoded_ videos and ignore the playlists / id-list functionallity... take a look to `demo-hardcoded.htm`.
 
