@@ -1,0 +1,109 @@
+.RYPP {
+  /* Youtube Player With Playlist */
+  width: 100%;
+  overflow: hidden;
+  background: #1a1a1a;
+  font: 400 14px/120% Arial, Helvetica, sans-serif;
+  color: #999; }
+  .RYPP #RYPP-video {
+    width: 61.5%;
+    float: left;
+    position: relative; }
+    .RYPP #RYPP-video > .RYPP-placeholder {
+      display: block;
+      width: 100%;
+      height: auto; }
+    .RYPP #RYPP-video > iframe {
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 2; }
+  .RYPP .RYPP-items {
+    position: absolute;
+    left: 0;
+    top: 64px;
+    right: 0;
+    bottom: 0;
+    overflow-y: auto; }
+  .RYPP .RYPP-playlist {
+    width: 38.5%;
+    float: left;
+    position: relative;
+    overflow: hidden;
+    background: #222; }
+    .RYPP .RYPP-playlist a {
+      color: #999; }
+      .RYPP .RYPP-playlist a:hover {
+        color: #fff; }
+    .RYPP .RYPP-playlist > header {
+      width: 100%;
+      height: 64px;
+      padding: 16px 0 0 8px;
+      background: #222;
+      border-left: 8px solid #222;
+      border-right: 8px solid #222;
+      border-bottom: 1px solid #3a3a3a;
+      z-index: 2; }
+      .RYPP .RYPP-playlist > header ._h1 {
+        margin: 0 0 4px 0;
+        padding: 0;
+        font-size: 16px;
+        font-weight: 400;
+        color: #fff; }
+      .RYPP .RYPP-playlist > header p {
+        margin: 0;
+        padding: 0; }
+    .RYPP .RYPP-playlist ol {
+      padding: 0 0 16px 0;
+      margin: 0;
+      list-style: none;
+      counter-reset: item; }
+      .RYPP .RYPP-playlist ol li {
+        position: relative;
+        vertical-align: middle;
+        overflow: hidden;
+        padding: 12px 0 12px 12px; }
+        .RYPP .RYPP-playlist ol li > img {
+          width: 18%;
+          display: inline-block;
+          vertical-align: middle;
+          border: 2px solid transparent; }
+        .RYPP .RYPP-playlist ol li > p {
+          width: 76%;
+          margin: 0;
+          padding: 0 16px 0 0;
+          float: right;
+          display: inline-block;
+          vertical-align: middle;
+          text-align: left;
+          color: #cacaca; }
+          .RYPP .RYPP-playlist ol li > p > small {
+            margin: 0;
+            padding: 0;
+            font-size: 80%; }
+        .RYPP .RYPP-playlist ol li:hover {
+          background-color: #3a3a3a;
+          cursor: pointer; }
+        .RYPP .RYPP-playlist ol li.selected {
+          background-color: #3a3a3a;
+          cursor: pointer; }
+          .RYPP .RYPP-playlist ol li.selected > p {
+            color: #fff; }
+          .RYPP .RYPP-playlist ol li.selected > img {
+            border: 2px solid #c03636; }
+          .RYPP .RYPP-playlist ol li.selected:before {
+            content: '▶';
+            font-size: 7px;
+            color: #c03636; }
+        .RYPP .RYPP-playlist ol li:before {
+          counter-increment: item;
+          content: counter(item);
+          font-size: 80%; }
+
+@media only screen and (max-width: 639px) {
+  .RYPP #RYPP-video {
+    width: 100%; }
+  .RYPP .RYPP-playlist {
+    width: 100%; } }

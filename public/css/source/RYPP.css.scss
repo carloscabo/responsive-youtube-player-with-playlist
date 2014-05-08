@@ -1,0 +1,166 @@
+// Sizes
+
+$max_h: 360px;
+$play_list_head_h: 64px;
+
+// Colors
+
+$main_bg: #1a1a1a;
+$main_text: #999;
+
+$li_bg: #222;
+$li_bg_active: #3a3a3a;
+
+$accent: #c03636;
+
+$font_base: Arial, Helvetica, sans-serif;
+
+.RYPP { /* Youtube Player With Playlist */
+  width: 100%;
+  // height: $max_h;
+  overflow: hidden;
+  background: $main_bg; // pink
+
+  font: 400 14px/120% $font_base;
+  color: $main_text;
+
+  // Main video box
+  #RYPP-video {
+    width: 61.5%;
+    float: left;
+    position: relative;
+    > .RYPP-placeholder {
+      display: block;
+      width: 100%;
+      height: auto;
+    }
+    > iframe {
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 2;
+    }
+  }
+
+  .RYPP-items {
+    position: absolute;
+    left: 0;
+    top: $play_list_head_h;
+    right: 0;
+    bottom: 0;
+    overflow-y: auto;
+  }
+
+  // Playlist
+  .RYPP-playlist {
+    width: 38.5%;
+    // height: $max_h;
+    float: left;
+    position: relative;
+    overflow: hidden;
+    background: $li_bg;
+    a {
+      color: $main_text;
+      &:hover {
+        color: #fff;
+      }
+    }
+    > header {
+      width: 100%;
+      height: $play_list_head_h;
+      padding: 16px 0 0 8px;
+
+      background: $li_bg;
+      border-left: 8px solid $li_bg;
+      border-right: 8px solid $li_bg;
+      border-bottom: 1px solid #3a3a3a;
+      z-index: 2;
+      ._h1 {
+        margin: 0 0 4px 0;
+        padding: 0;
+
+        font-size: 16px;
+        font-weight: 400;
+        color: #fff;
+      }
+      p {
+        margin: 0;
+        padding: 0;
+      }
+    }
+    ol {
+      padding: 0 0 16px 0;
+      margin: 0;
+      list-style: none;
+
+      counter-reset: item;
+      li {
+        // width: 100%;
+        position: relative;
+        vertical-align: middle;
+        overflow: hidden;
+        padding: 12px 0 12px 12px;
+        > img {
+          width: 18%;
+          display: inline-block;
+          vertical-align: middle;
+          border: 2px solid transparent;
+        }
+        > p {
+          width: 76%;
+          margin: 0;
+          padding: 0 16px 0 0;
+          float: right;
+          display: inline-block;
+          vertical-align: middle;
+
+          text-align: left;
+          color: #cacaca;
+          > small {
+            margin: 0;
+            padding: 0;
+            font-size: 80%;
+          }
+        }
+        &:hover {
+          background-color: $li_bg_active;
+          cursor: pointer;
+        }
+        &.selected {
+          background-color: $li_bg_active;
+          cursor: pointer;
+          > p {
+            color: #fff;
+          }
+          > img {
+            border: 2px solid $accent;
+          }
+          &:before {
+            content: '▶';
+            font-size: 7px;
+            color: $accent;
+          }
+        }
+        &:before {
+          counter-increment: item;
+          content: counter(item);
+          font-size: 80%;
+        }
+      }
+    }
+  }
+}
+
+// Responsive sample
+@media only screen and (max-width: 639px) {
+  .RYPP {
+    #RYPP-video {
+      width: 100%;
+    }
+    .RYPP-playlist {
+      width: 100%;
+    }
+  }
+}
