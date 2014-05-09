@@ -47,7 +47,7 @@ var RYPP = {
     // this.fill_from_IDs();
 
     // Read videos from playlist
-    // this.fill_from_playlist_ID();
+    // this.fill_from_playlist();
   },
 
   // Inserts a image placeholder to fix responsive iframe
@@ -103,7 +103,7 @@ var RYPP = {
   },
 
   // Get video from data-ids
-  fill_from_playlist_ID: function() {
+  fill_from_playlist: function() {
     var
       id = this.settings.$el.data('playlist');
       url = 'http://gdata.youtube.com/feeds/api/playlists/'+id+'?v=2&alt=json&callback=?',
@@ -142,7 +142,7 @@ var RYPP = {
     $.each(ids, function(idx, val){
       that.get_ytvid_json(val);
     });
-    that.start_playl();
+    this.start_playl();
   },
 
   get_ytvid_json: function (vid) {
@@ -189,7 +189,7 @@ var RYPP = {
     });
 
     // Select first if none
-    if (s.$items.find('li.selected').length == 0) {
+    if (s.$items.find('li.selected').length === 0) {
       s.$items.find('li').first().addClass('selected');
     }
 
@@ -213,7 +213,7 @@ var RYPP = {
   // Ready to play
   onPlayerReady: function () {
     if (RYPP.settings.$el.attr('data-playlist')) {
-      RYPP.fill_from_playlist_ID();
+      RYPP.fill_from_playlist();
     } else if (RYPP.settings.$el.attr('data-ids')) {
       RYPP.fill_from_IDs();
     } else {
