@@ -28,7 +28,7 @@ function some(promises){
         d.resolve(results);
         console.log('Done!');
       }
-    })
+    });
   }
   return d.promise(); // return a promise
 }

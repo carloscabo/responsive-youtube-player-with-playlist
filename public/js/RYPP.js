@@ -10,13 +10,15 @@ var RYPP = {
 
   // Settings
   settings: {
-    $el: null,
-    $playlc: null, // Playlist container
-    $items:  null, // Items <li> container
-    $videoc: null, // Video container
-    $header: null, // Playlist header
-    player: null,  // Youtube player
-    ratio: '16:9'
+    $el:      null,
+    $playlc:  null, // Playlist container
+    $items:   null, // Items <li> container
+    $videoc:  null, // Video container
+    $header:  null, // Playlist header
+    yturl:    'http://gdata.youtube.com/feeds/api/videos/{{vid}}?v=2&alt=json',
+    promises: null,
+    player:   null,  // Youtube player
+    ratio:   '16:9'
   },
 
   init: function(el, options) {
@@ -35,19 +37,13 @@ var RYPP = {
     tag.src = "http://www.youtube.com/player_api";
     hID.appendChild(tag);
 
+    // Video placeholder on the left
+    this.insert_video_placeholder();
+
     // Playlist is empty?
     if ($.trim(s.$items.html()) == '') {
       $('<ol>').appendTo(s.$items);
     }
-
-    // Video placeholder on the left
-    this.insert_video_placeholder();
-
-    // Read vídeos from IDs
-    // this.fill_from_IDs();
-
-    // Read videos from playlist
-    // this.fill_from_playlist();
   },
 
   // Inserts a image placeholder to fix responsive iframe
@@ -78,10 +74,6 @@ var RYPP = {
     $('<iframe src="" frameborder="0" allowfullscreen></iframe>').appendTo(s.$videoc);
 
     this.fix_heights();
-
-    s.$el.resize(function(e) {
-      console.log('resize!');
-    });
   },
 
   // Resizes playlist
@@ -96,14 +88,16 @@ var RYPP = {
 
   // Add video block to playlist
   add_vid_to_playl: function(vid, tit, aut, thu) {
-    $('<li data-video-id="'+vid+'"><p>'+tit+'<small><br>'+aut+'</small></p><img src="'+thu+'"></li>').appendTo(this.settings.$items.find('ol'));
+    var
+      s  = this.settings;
+    $('<li data-video-id="'+vid+'"><p>'+tit+'<small><br>'+aut+'</small></p><img src="'+thu+'"></li>').appendTo(s.$items.find('ol'));
       // console.log(tit);
       // console.log(aut);
       // console.log(thu);
   },
 
   // Get video from data-ids
-  fill_from_playlist: function() {
+  get_from_playlist: function() {
     var
       id = this.settings.$el.data('playlist');
       url = 'http://gdata.youtube.com/feeds/api/playlists/'+id+'?v=2&alt=json&callback=?',
@@ -135,47 +129,51 @@ var RYPP = {
   },
 
   // Get video from data-ids
-  fill_from_IDs: function () {
+  get_from_IDs: function () {
     var
-      that = this;
-    ids = this.settings.$el.data('ids').split(',');
-    $.each(ids, function(idx, val){
-      that.get_ytvid_json(val);
-    });
-    this.start_playl();
-  },
-
-  get_ytvid_json: function (vid) {
-    var
+      s    = this.settings,
       that = this,
-      json = null,
-      // format = 6 to skip deleted videos
-      url = 'http://gdata.youtube.com/feeds/api/videos/'+vid+'?v=2&alt=json';
+      idsA = s.$el.data('ids').split(',');
 
-    $.ajaxSetup ({cache: false});
-    $.ajax( url, {
-      context: this,
-      dataType: 'json',
-      crossDomain: true,
-      error: function(){
-        // Not successful
-      },
-      success: function(data){
-        // console.log(data);
-        var
-          tit = data.entry.title.$t,
-          aut = data.entry.author[0].name.$t,
-          thu = data.entry.media$group.media$thumbnail[0].url;
+    s.promises = idsA.map(this.get_vid_json);
 
-        that.add_vid_to_playl(vid, tit, aut, thu);
+    this.some(s.promises).then(function(results){
+      for(var i = 0; i < results.length; i++) {
+        console.log(results[i]); // log
+        console.log('e0');
       }
     });
-    return json;
+  },
+
+  // get a hook on when all of the promises resolve, some fulfill
+  some: function(promises){
+    var
+      s = this.settings,
+      d = $.Deferred(), results = [],
+      remaining = s.promises.length;
+    for(var i = 0; i < s.promises.length; i++){
+      s.promises[i].then(function(res){
+        results.push(res); // on success, add to results
+      }).always(function(res){
+        remaining--; // always mark as finished
+        if(!remaining) {
+          d.resolve(results);
+          console.log('Done!');
+        }
+      });
+    }
+    return d.promise(); // return a promise
+  },
+
+  get_vid_json: function (vid) {
+    var u = RYPP.settings.yturl.replace('{{vid}}', vid);
+    return $.getJSON( u ).then(function(res){
+      return {video:vid,result:res.entry};
+    });
   },
 
   // All videos are supossed to be loaded, lest start the playlist
   start_playl: function() {
-
     var
       s = this.settings;
 
@@ -185,6 +183,7 @@ var RYPP = {
       s.$items.find('li').removeClass('selected');
       $(this).addClass('selected');
       var vid = $(this).data('video-id');
+      // Call YT API function
       s.player.loadVideoById(vid);
     });
 
@@ -195,6 +194,7 @@ var RYPP = {
 
     // Play first selected
     var id = s.$items.find('li.selected').data('video-id');
+      // Call YT API function
     s.player.loadVideoById(id);
 
   },
@@ -212,10 +212,11 @@ var RYPP = {
 
   // Ready to play
   onPlayerReady: function () {
+    // Now we read the video list from playlist data or from IDs...
     if (RYPP.settings.$el.attr('data-playlist')) {
-      RYPP.fill_from_playlist();
+      RYPP.get_from_playlist();
     } else if (RYPP.settings.$el.attr('data-ids')) {
-      RYPP.fill_from_IDs();
+      RYPP.get_from_IDs();
     } else {
       RYPP.start_playl();
     }
@@ -227,7 +228,7 @@ var RYPP = {
     var next = null;
     if(e.data === 0) {
       next = RYPP.settings.$items.find('li.selected').next();
-      if (next.length == 0) {
+      if (next.length === 0) {
         next = RYPP.settings.$items.find('li').first();
       }
       next.click();
