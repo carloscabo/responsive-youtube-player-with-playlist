@@ -139,8 +139,15 @@ var RYPP = {
 
     this.some(s.promises).then(function(results){
       for(var i = 0; i < results.length; i++) {
-        console.log(results[i]); // log
-        console.log('e0');
+        // console.log(results[i]); // log
+        if (results[i].result.media$group.media$content !== undefined) {
+          var
+            vid  = results[i].video;
+            tit  = results[i].result.title.$t,
+            aut  = results[i].result.author[0].name.$t,
+            thu  = results[i].result.media$group.media$thumbnail[0].url;
+          that.add_vid_to_playl(vid, tit, aut, thu);
+        }
       }
     });
   },
@@ -158,7 +165,8 @@ var RYPP = {
         remaining--; // always mark as finished
         if(!remaining) {
           d.resolve(results);
-          console.log('Done!');
+          // console.log('Done!');
+          RYPP.start_playl();
         }
       });
     }
