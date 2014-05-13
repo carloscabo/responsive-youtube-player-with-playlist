@@ -1,3 +1,8 @@
+/*
+Solution from
+http://stackoverflow.com/questions/23617895/ignoring-ajax-errors-with-promises-array-and-when/23625847#23625847
+*/
+
 var url = 'http://gdata.youtube.com/feeds/api/videos/{{vid}}?v=2&alt=json';
 
 function getVideo(vid){
@@ -13,7 +18,6 @@ some(promises).then(function(results){
     console.log(results[i]); // log
   }
 });
-
 
 // get a hook on when all of the promises resolve, some fulfill
 function some(promises){
