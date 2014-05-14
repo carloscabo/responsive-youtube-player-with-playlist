@@ -58,7 +58,7 @@ ID of the YouTube playlist, RYPP will automatically get its data and thumbnails 
 
 Alternativelly to the playlist you can provide a lista of **comma-separated ids** of the YouTube vídeos you want to add to the playlist. Take a look to `demo-id-list.htm`.
 
-## Manual / 'hardcoded'
+## Manual / 'hardcoded' (TO-DO!!!)
 
 You can also _prefill_ the playlist with some _harcoded_ videos and ignore the playlists / id-list functionallity... take a look to `demo-hardcoded.htm`.
 
