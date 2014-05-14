@@ -52,7 +52,7 @@ Aspect ratio of the YouTube video, valid values are `2:1`, `4:3` and `16:9` (def
 
 `data-playlist="PL2591DC20C4BB4D78"`
 
-ID of the YouTube playlist, RYPP will automatically get its data and thumbnails and populate the list on the riaght with them. Take a look to `demo-playlist.htm`.
+ID of the YouTube playlist, RYPP will automatically get its data and thumbnails and populate the list on the right with them. Take a look to `demo-playlist.htm`.
 
 `data-ids="hWGUnrIiOoI,7nXcLBXR70M"`
 
