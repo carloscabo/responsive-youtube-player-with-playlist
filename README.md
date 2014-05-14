@@ -15,6 +15,8 @@ Responsive YouTube Player with Playlist
 
 At this moment **RYPP** supports one instance per page, that means you cannot add several **RYPP** players in the same page... sorry for the inconvenience.
 
+Testing in IE. Right now its only tested in Chrome. Any bug report will b great apretiated.
+
 ## Usage
 
 Basic `HTML` element:
@@ -28,7 +30,7 @@ Basic `HTML` element:
       <div class="RYPP-playlist">
         <header>
           <h2 class="_h1">Playlist title</h2>
-          <p>Playlist subtitleSubtitulo o un <a href="#" target="_blank">#hashtag</a></p>
+          <p>Playlist subtitle or <a href="#" target="_blank">#hashtag</a></p>
         </header>
         <div class="RYPP-items"></div>
       </div>
@@ -59,4 +61,8 @@ Alternativelly to the playlist you can provide a lista of **comma-separated ids*
 ## Manual / 'hardcoded'
 
 You can also _prefill_ the playlist with some _harcoded_ videos and ignore the playlists / id-list functionallity... take a look to `demo-hardcoded.htm`.
+
+## Thanks
+
+@frostcrazy & [@Vortizhe](https://github.com/vortizhe)
 
