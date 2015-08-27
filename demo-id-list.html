@@ -39,7 +39,7 @@
 
 <div class="wrapper">
 
-  <div class="RYPP r16-9" data-ids="PZl8D4onmak,intentionally_erroneus,VNzxsOB2Q3g,q5XJhzPwxmg">
+  <div class="RYPP r16-9" data-ids="HMpmI2F2cMs,intentionally_erroneus,QLXzSefzVWU,5RWb76pj4Do">
     <div id="RYPP-video">
       <div id="RYPP-video-player">
         <!-- Will be replaced -->
@@ -48,7 +48,7 @@
     <div class="RYPP-playlist">
       <header>
         <h2 class="_h1">Playlist title</h2>
-        <p>Playlist subtitle<a href="#" target="_blank">#hashtag</a></p>
+        <p>Playlist subtitle <a href="#" target="_blank">#hashtag</a></p>
       </header>
       <div class="RYPP-items"></div>
     </div>
@@ -58,19 +58,21 @@
 
 <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
 <script src="js/RYPP.js"></script>
-<script>
 
+<script>
   $(document).ready(function() {
     // la magia aquí
 
     RYPP.api_key = 'AIzaSyA1rpTMrNjth1R6-LfLe0UG8v1946nj3Xw';
     $('.RYPP').rypp({
-      autoplay: false,
-      autonext: false
+      // autoplay: true, // Default
+      // autonext: true, // Default
+      // loop: true,     // Default
+      // mute: false     // Default
     });
 
   });
-
 </script>
+
 </body>
 </html>

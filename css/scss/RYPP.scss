@@ -62,6 +62,7 @@ $font_base: Arial, Helvetica, sans-serif;
   }
 
   .RYPP-items {
+    width: 100%;
     position: absolute;
     left: 0;
     top: $play_list_head_h;
@@ -182,12 +183,16 @@ $font_base: Arial, Helvetica, sans-serif;
 // Responsive sample
 @media only screen and (max-width: 639px) {
   .RYPP {
-    position: static;
     padding-right: 0;
     .RYPP-playlist {
       width: 100%;
       position: static;
-      height: 450px;
+      float: left;
+      .RYPP-items {
+        position: static;
+        max-height: 350px;
+        overflow: auto;
+      }
     }
   }
 }

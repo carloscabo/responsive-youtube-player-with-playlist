@@ -1,9 +1,7 @@
 /*
   Youtube Player with Playlist (v2.0)
   https://github.com/carloscabo/responsive-youtube-player-with-playlist
-  by
-  Carlos Cabo (@putuko)
-  Alejandro Menéndez (@frostcrazy)
+  by Carlos Cabo (@putuko)
 */
 
 var RYPP = {
@@ -26,14 +24,19 @@ var RYPP = {
   // Setting
   options: {
     autoplay: true,
-    autonext: true
+    autonext: true,
+    loop: true,
+    mute: false
   },
 
   // Settings
   data: {
     // Playlist url
-    ytplurl: 'https://www.googleapis.com/youtube/v3/playlistItems?part=snippet&maxResults=50&playlistId={{PLAYLIST_ID}}&key={{YOUR_API_KEY}}',
-    promises: null
+    ytapi: {
+      playlist: 'https://www.googleapis.com/youtube/v3/playlistItems?part=snippet&maxResults=50&playlistId={{RESOURCES_ID}}&key={{YOUR_API_KEY}}',
+      videolist: 'https://www.googleapis.com/youtube/v3/videos?part=snippet&maxResults=50&id={{RESOURCES_ID}}&key={{YOUR_API_KEY}}'
+    },
+    firsttime: true
   },
 
   init: function(el, options) {
@@ -41,6 +44,15 @@ var RYPP = {
     if (this.api_key === null) {
       console.log("Youtube API V3 requires a valid API KEY.\nFollow the instructions at: https://developers.google.com/youtube/v3/getting-started");
       return false;
+    }
+
+    // Merge initial options
+    if (typeof options !== 'undefined') {
+      $.each( options, function( key, value ) {
+        if (typeof this.options[key] !== 'undefined') {
+          this.options[key] = value;
+        }
+      });
     }
 
     var
@@ -71,17 +83,14 @@ var RYPP = {
     var
       D  = this.DOM;
     $('<li data-video-id="'+vid+'"><p class="title">'+tit+'<small class="author"><br>'+aut+'</small></p><img src="'+thu+'" class="thumb"></li>').appendTo(D.$items.find('ol'));
-      // console.log(tit);
-      // console.log(aut);
-      // console.log(thu);
   },
 
   // Get video from data-ids
-  get_from_playlist: function() {
+  get_videos_from: function(kind, resources_id) {
     var
-      plid = this.DOM.$el.data('playlist'),
-      url  = this.data.ytplurl.replace('{{PLAYLIST_ID}}', plid).replace('{{YOUR_API_KEY}}', this.api_key),
-      that = this;
+      that = this,
+      url  = this.data.ytapi[kind].replace('{{RESOURCES_ID}}', resources_id).replace('{{YOUR_API_KEY}}', this.api_key);
+
     $.ajaxSetup ({cache: false});
     $.ajax(url, {
       context: this,
@@ -93,69 +102,26 @@ var RYPP = {
       success: function(data){
 
         $.each(data.items, function(idx, item) {
+
           // Videos without thumbnail were deleted!
           if (typeof item.snippet.thumbnails !== 'undefined') {
             var
-              vid  = item.snippet.resourceId.videoId,
+              vid  = null,
               tit  = item.snippet.title,
+              aut  = item.snippet.channelTitle,
               thu  = item.snippet.thumbnails.default.url;
-            that.add_vid_to_playl(vid, tit, null, thu);
+            if (typeof item.snippet.resourceId === 'undefined') {
+              // ID de un vídeo
+              vid = item.id;
+            } else {
+              // Elemento de playlist
+              vid =  item.snippet.resourceId.videoId;
+            }
+            that.add_vid_to_playl(vid, tit, aut, thu);
           }
         });
         that.start_playl();
       }
-    });
-  },
-
-  // Get video from data-ids
-  get_from_IDs: function () {
-    var
-      dat  = this.data,
-      that = this,
-      idsA = dat.$el.data('ids').split(',');
-
-    dat.promises = idsA.map(this.get_vid_json);
-
-    this.some(dat.promises).then(function(results){
-      for(var i = 0; i < results.length; i++) {
-        // console.log(results[i]); // log
-        if (results[i].result.media$group.media$content !== undefined) {
-          var
-            vid  = results[i].video;
-            tit  = results[i].result.title.$t,
-            aut  = results[i].result.author[0].name.$t,
-            thu  = results[i].result.media$group.media$thumbnail[0].url;
-          that.add_vid_to_playl(vid, tit, aut, thu);
-        }
-      }
-    });
-  },
-
-  // get a hook on when all of the promises resolve, some fulfill
-  some: function(promises){
-    var
-      dat = this.data,
-      d   = $.Deferred(), results = [],
-      remaining = s.promises.length;
-    for(var i = 0; i < s.promises.length; i++){
-      dat.promises[i].then(function(res){
-        results.push(res); // on success, add to results
-      }).always(function(res){
-        remaining--; // always mark as finished
-        if(!remaining) {
-          d.resolve(results);
-          // console.log('Done!');
-          RYPP.start_playl();
-        }
-      });
-    }
-    return d.promise(); // return a promise
-  },
-
-  get_vid_json: function (vid) {
-    var u = RYPP.data.ytplurl.replace('{{vid}}', vid);
-    return $.getJSON( u ).then(function(res){
-      return {video:vid,result:res.entry};
     });
   },
 
@@ -185,6 +151,7 @@ var RYPP = {
     vid = D.$items.find('li.selected').data('video-id');
     // Call YT API function
     that.ytplayer.loadVideoById(vid);
+    // that.ytplayer.player.pauseVideo();
 
   },
 
@@ -209,9 +176,18 @@ var RYPP = {
   onPlayerReady: function () {
     // Now we read the video list from playlist data or from IDs...
     if (RYPP.DOM.$el.attr('data-playlist')) {
-      RYPP.get_from_playlist();
+      RYPP.get_videos_from(
+        'playlist',
+        RYPP.DOM.$el.attr('data-playlist')
+      );
     } else if (RYPP.DOM.$el.attr('data-ids')) {
-      RYPP.get_from_IDs();
+      var vl = RYPP.DOM.$el.attr('data-ids');
+      // Clean spaces
+      vl = ($.map(vl.split(','),$.trim)).join(',');
+      RYPP.get_videos_from(
+        'videolist',
+        vl
+      );
     } else {
       RYPP.start_playl();
     }
@@ -219,15 +195,29 @@ var RYPP = {
 
   // When video finish
   onPlayerStateChange: function(e){
+
+    // On video loaded?
+    if(e.data === -1 && RYPP.data.firsttime) {
+      if(!RYPP.options.autoplay) {
+        RYPP.ytplayer.pauseVideo();
+      }
+      if(RYPP.options.mute) {
+        RYPP.ytplayer.mute();
+      }
+    }
+
     // Play next
     var next = null;
-    if(e.data === 0 && this.options.autonext) {
+    if(e.data === 0 && RYPP.options.autonext) {
       next = RYPP.DOM.$items.find('li.selected').next();
-      if (next.length === 0) {
+      if (next.length === 0 && RYPP.options.loop) {
         next = RYPP.DOM.$items.find('li').first();
       }
       next.click();
     }
+
+    // First video
+    RYPP.data.firsttime = false;
   }
 
 // YPWPL

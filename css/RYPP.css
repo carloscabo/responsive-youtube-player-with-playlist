@@ -26,6 +26,7 @@
   .RYPP.r2-1 #RYPP-video {
     padding-top: 50%; }
   .RYPP .RYPP-items {
+    width: 100%;
     position: absolute;
     left: 0;
     top: 64px;
@@ -117,9 +118,12 @@
 
 @media only screen and (max-width: 639px) {
   .RYPP {
-    position: static;
     padding-right: 0; }
     .RYPP .RYPP-playlist {
       width: 100%;
       position: static;
-      height: 450px; } }
+      float: left; }
+      .RYPP .RYPP-playlist .RYPP-items {
+        position: static;
+        max-height: 350px;
+        overflow: auto; } }
