@@ -23,6 +23,8 @@
   body {
     height:100%;
     min-height:100%;
+    padding: 20px;
+    background-color: #eee;
   }
 
   .wrapper {
@@ -37,7 +39,7 @@
 
 <div class="wrapper">
 
-  <div class="RYPP" data-ratio="4:3" data-ids="GeeFjmposyc,VNzxsOB2Q3g,q5XJhzPwxmg,zzzz">
+  <div class="RYPP r4-3" data-playlist="PL2591DC20C4BB4D78">
     <div id="RYPP-video">
       <div id="RYPP-video-player">
         <!-- Will be replaced -->
@@ -56,6 +58,16 @@
 
 <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
 <script src="js/RYPP.js"></script>
-<script src="js/ready.js"></script>
+
+<script>
+  $(document).ready(function() {
+    // la magia aquí
+
+    RYPP.api_key = 'AIzaSyA1rpTMrNjth1R6-LfLe0UG8v1946nj3Xw';
+    $('.RYPP').rypp();
+
+  });
+</script>
+
 </body>
 </html>

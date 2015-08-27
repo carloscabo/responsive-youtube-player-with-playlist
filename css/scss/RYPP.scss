@@ -3,37 +3,36 @@
 $max_h: 360px;
 $play_list_head_h: 64px;
 
-// Colors
+// Width
+$playlist_width: 250px;
 
-$main_bg: #1a1a1a;
-$main_text: #999;
+// Color
+$col_main_bg: #1a1a1a;
+$col_main_text: #999;
 
-$li_bg: #222;
-$li_bg_active: #3a3a3a;
+$col_li_bg: #222;
+$col_li_bg_active: #3a3a3a;
+$col_accent: #c03636;
 
-$accent: #c03636;
-
+// Fonts
 $font_base: Arial, Helvetica, sans-serif;
 
 .RYPP { /* Youtube Player With Playlist */
   width: 100%;
-  // height: $max_h;
+  position: relative;
+  padding-right: $playlist_width;
+  background: $col_main_bg;
   overflow: hidden;
-  background: $main_bg; // pink
 
   font: 400 14px/120% $font_base;
-  color: $main_text;
+  color: $col_main_text;
 
   // Main video box
   #RYPP-video {
-    width: 61.5%;
+    width: 100%;
+    padding-top: 56.25%;
     float: left;
     position: relative;
-    > .RYPP-placeholder {
-      display: block;
-      width: 100%;
-      height: auto;
-    }
     > iframe {
       position: absolute;
       left: 0;
@@ -41,6 +40,24 @@ $font_base: Arial, Helvetica, sans-serif;
       width: 100%;
       height: 100%;
       z-index: 2;
+    }
+  }
+
+  &.r16-9 {
+    #RYPP-video {
+      padding-top: 56.25%;
+    }
+  }
+
+  &.r4-3 {
+    #RYPP-video {
+      padding-top: 75%;
+    }
+  }
+
+  &.r2-1 {
+    #RYPP-video {
+      padding-top: 50%;
     }
   }
 
@@ -55,14 +72,14 @@ $font_base: Arial, Helvetica, sans-serif;
 
   // Playlist
   .RYPP-playlist {
-    width: 38.5%;
-    // height: $max_h;
-    float: left;
-    position: relative;
-    overflow: hidden;
-    background: $li_bg;
+    width: $playlist_width;
+    position: absolute;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    background: $col_li_bg;
     a {
-      color: $main_text;
+      color: $col_main_text;
       &:hover {
         color: #fff;
       }
@@ -72,9 +89,9 @@ $font_base: Arial, Helvetica, sans-serif;
       height: $play_list_head_h;
       padding: 16px 0 0 8px;
 
-      background: $li_bg;
-      border-left: 8px solid $li_bg;
-      border-right: 8px solid $li_bg;
+      background: $col_li_bg;
+      border-left: 8px solid $col_li_bg;
+      border-right: 8px solid $col_li_bg;
       border-bottom: 1px solid #3a3a3a;
       z-index: 2;
       ._h1 {
@@ -125,22 +142,22 @@ $font_base: Arial, Helvetica, sans-serif;
           }
         }
         &:hover {
-          background-color: $li_bg_active;
+          background-color: $col_li_bg_active;
           cursor: pointer;
         }
         &.selected {
-          background-color: $li_bg_active;
+          background-color: $col_li_bg_active;
           cursor: pointer;
           > p {
             color: #fff;
           }
           > img {
-            border: 2px solid $accent;
+            border: 2px solid $col_accent;
           }
           &:before {
             content: '▶';
-            font-size: 7px;
-            color: $accent;
+            font-size: 10px;
+            color: $col_accent;
           }
         }
         &:before {
@@ -154,23 +171,23 @@ $font_base: Arial, Helvetica, sans-serif;
 }
 
 // Chrome scrollbar
-/* .RYPP-playlist::-webkit-scrollbar {
-  width: 20px;
-  background: yellow;
+.RYPP-items::-webkit-scrollbar {
+  width: 6px;
+  background: $col_li_bg_active;
 }
-.RYPP-playlist::-webkit-scrollbar-thumb {
-  border: 2px dotted green;
-  border-radius: 10px;
-} */
+.RYPP-items::-webkit-scrollbar-thumb {
+  background: $col_main_text;
+}
 
 // Responsive sample
 @media only screen and (max-width: 639px) {
   .RYPP {
-    #RYPP-video {
-      width: 100%;
-    }
+    position: static;
+    padding-right: 0;
     .RYPP-playlist {
       width: 100%;
+      position: static;
+      height: 450px;
     }
   }
 }

@@ -1,10 +1,12 @@
 {
-  "name": "YTPWP",
-  "version": "0.1.0",
   "devDependencies": {
-    "grunt": "^0.4.2",
-    "grunt-contrib-watch": "^0.5.3",
-    "grunt-sass": "^0.11.0",
-    "grunt-cli": "^0.1.13"
+    "gulp-util": "^2.2.20",
+    "gulp": "^3.8.6",
+    "gulp-sass": "^0.7.2",
+    "gulp-rename": "^1.2.0",
+    "gulp-watch": "^0.6.8",
+    "gulp-size": "^0.4.0",
+    "gulp-livereload": "^2.1.0",
+    "gulp-plumber": "^0.6.3"
   }
 }
