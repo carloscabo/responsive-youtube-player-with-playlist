@@ -5,9 +5,9 @@ Responsive YouTube Player with Playlist
 
 **(RYPP)** Responsive YouTube Player with Playlist, title is self-explanatory ;-)
 
-[Playlist Demo](#)
+[Playlist Demo](http://htmlpreview.github.io/?http://raw.githubusercontent.com/carloscabo/responsive-youtube-player-with-playlist/master/demo-playlist.html)
 
-[VideoId list demo](#)
+[VideoId list demo](http://htmlpreview.github.io/?http://raw.githubusercontent.com/carloscabo/responsive-youtube-player-with-playlist/master/demo-id-list.html)
 
 ## Requirements
 
