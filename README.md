@@ -21,7 +21,7 @@ Since Youtube API V3.0, it's **mandatory** to create a YT API key in order to ge
 
 In order to create your own API Key follow these intructions:
 <https://developers.google.com/youtube/v3/getting-started>
-(Remember to limit its usage you you site domain)
+(Remember to limit its usage you you site / domain)
 
 ## TO-DO / Known issues
 
