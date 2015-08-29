@@ -9,7 +9,7 @@ Responsive YouTube Player with Playlist (RYPP)
 
 ## Requirements
 
-`Jquery (1.9.1+)`
+`JQuery (1.9.1+)`
 
 `RYPP.js`
 
@@ -56,7 +56,7 @@ Starting `RYPP` from JS:
 $(document).ready(function() {
 
   \\ You need a valid API Key
-  \\ In the creation process you can define in wich websites
+  \\ In the creation process you can define in which websites
   \\ can be used, to avoid unnapropiated uses
   var api_key = 'AIzaSyA1rpTMrNjth1R6-LfLe0UG8v1946nj3Xw';
 
