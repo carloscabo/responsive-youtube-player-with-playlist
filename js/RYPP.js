@@ -15,18 +15,13 @@ var RYPP = (function($, undefined) {
       this.api_key = api_key;
     }
 
-    // DOM Elements
+    // DOM Elements container
     this.DOM = {};
 
-    // Default settings
-    this.options = {
-      autoplay: true,
-      autonext: true,
-      loop: true,
-      mute: false
-    };
+    // Default settings container
+    this.options = {};
 
-    // Settings
+    // Data / urls
     this.data = {
       // Playlist url
       ytapi: {
@@ -45,13 +40,15 @@ var RYPP = (function($, undefined) {
 
     init: function(el, options) {
 
+      // Default options
+      this.options.autoplay = true;
+      this.options.autonext = true;
+      this.options.loop = true;
+      this.options.mute = false;
+
       // Merge initial options
       if (typeof options !== 'undefined') {
-        $.each( options, function( key, value ) {
-          if (typeof this.options[key] !== 'undefined') {
-            this.options[key] = value;
-          }
-        });
+        $.extend(this.options, options);
       }
 
       // YT Player object
@@ -259,8 +256,8 @@ function onYouTubeIframeAPIReady() {
 }
 
 // JQuery hook
-$.fn.rypp = function(options) {
+$.fn.rypp = function(api_key, options) {
   return this.each(function() {
-    RYPP_instances.push(new RYPP(this, options));
+    RYPP_instances.push(new RYPP(this, api_key, options));
   });
 };

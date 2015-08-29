@@ -39,7 +39,7 @@
 
 <div class="wrapper">
 
-  <p>Sample playlist player with default options (see README.MD)</p>
+  <p>Sample playlist player with default options. Aspect ratio 16:9 (see README.md)</p>
 
   <div id="rypp-demo-1" class="RYPP r16-9" data-playlist="PL2591DC20C4BB4D78">
     <div class="RYPP-video">
@@ -58,7 +58,7 @@
 
   <br><br>
 
-  <p>Sample player with list of VideoIds (see README.MD)</p>
+  <p>Sample player with list of VideoIds with default options. Aspect ratio 4:3 (see README.md)</p>
 
   <div id="rypp-demo-2" class="RYPP r4-3" data-ids="HMpmI2F2cMs,intentionally_erroneus,QLXzSefzVWU,5RWb76pj4Do">
     <div class="RYPP-video">
@@ -77,9 +77,9 @@
 
   <br><br>
 
-  <p>This player has some custom options (see sourcecode)</p>
+  <p>Player has some custom options (autoplay = false, mute = true, loop = false...) See sourcecode and README.md.</p>
 
-  <div id="rypp-demo-3" class="RYPP r16-9" data-playlist="PLIdhMNCRXpCnkjiypT-RVTQO6qf1oZEZ1">
+  <div id="rypp-demo-3" class="RYPP r16-9" data-playlist="PLBABE45CEB8F38F98">
     <div class="RYPP-video">
       <div class="RYPP-video-player">
         <!-- Will be replaced -->
@@ -114,7 +114,7 @@
     // $('.RYPP').rypp('AIzaSyA1rpTMrNjth1R6-LfLe0UG8v1946nj3Xw');
 
     // Start two players by ID, with default settings
-    // $('#rypp-demo-1, #rypp-demo-2').rypp( api_key );
+    $('#rypp-demo-1, #rypp-demo-2').rypp( api_key );
 
     // Start two players by ID, with default settings
     $('#rypp-demo-3').rypp( api_key ,{

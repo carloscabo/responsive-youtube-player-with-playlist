@@ -1,5 +1,5 @@
-Responsive YouTube Player with Playlist
-=======================================
+Responsive YouTube Player with Playlist (RYPP)
+==============================================
 
 ![Screenshot](https://raw.githubusercontent.com/carloscabo/responsive-youtube-player-with-playlist/master/screenshot.png)
 
@@ -17,7 +17,7 @@ Responsive YouTube Player with Playlist
 
 ## IMPORTANT UPDATE: Youtube V.3 API KEY
 
-Since Youtube API V3.0, it's **mandatory** to create a YT API key in order to get the playlists contents programatically... there aren't other ways to do this. The old XML Feed used in the V.01 of RYPP has been removed by Youtube and no longer exists.
+Since Youtube API V3.0, it's **mandatory** to create a YT API key in order to get the playlists contents programatically... there aren't other ways to do this. **The old XML Feed used in the V.01 of RYPP has been removed by Youtube and no longer exists**.
 
 In order to create your own API Key follow these intructions:
 <https://developers.google.com/youtube/v3/getting-started>
@@ -27,9 +27,7 @@ In order to create your own API Key follow these intructions:
 
 1. By default playlist JSON response its limited to 50 items, so you cannot retrieve more than 50 items from a playlist.
 
-2. Actually **RYPP** supports one instance per page, that means you cannot add several **RYPP** players in the same page... sorry for the inconvenience.
-
-3. Testing in IE. Right now its only tested in Chrome. Any bug report will be great apretiated.
+2. Testing in IE. Right now its only tested in Chrome / Firefox. Any bug report or contribution will be great apretiated.
 
 ## Usage
 
@@ -62,7 +60,7 @@ $(document).ready(function() {
   \\ can be used, to avoid unnapropiated uses
   var api_key = 'AIzaSyA1rpTMrNjth1R6-LfLe0UG8v1946nj3Xw';
 
-  \\ Initialize the player with default options
+  \\ Initialize all the player in the page with default options
   $('.RYPP').rypp( api_key );
 });
 ````
@@ -75,13 +73,13 @@ Aspect ratio of the YouTube video is set by adding an additional CSS class to th
 ID of the YouTube playlist, RYPP will automatically get its data and thumbnails and populate the list on the right with them. Take a look to `demo-playlist.htm`.
 
 `data-ids="hWGUnrIiOoI,7nXcLBXR70M"`
-Alternativelly to the playlist you can provide a list of **comma-separated ids** of the YouTube vídeos you want to add to the playlist. Take a look to `demo-id-list.htm`.
+Alternativelly to the playlist you can provide a list of **comma-separated ids** of the YouTube vídeos you want to add to the playlist. Take a look to `demo.htm`.
 
 You have several parameters you can pass on RYPP start to control some basic behaviours...
 
 ````javascript
 
-$('.RYPP').rypp( '{{YOUR_API_KEY_HERE}}', {
+$('#RYPP-custom-player').rypp( '{{YOUR_API_KEY_HERE}}', {
 
   // Player starts automatically on first video
   autoplay: true, // Default
