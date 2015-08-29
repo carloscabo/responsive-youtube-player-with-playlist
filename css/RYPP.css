@@ -7,23 +7,23 @@
   overflow: hidden;
   font: 400 14px/120% Arial, Helvetica, sans-serif;
   color: #999; }
-  .RYPP #RYPP-video {
+  .RYPP .RYPP-video {
     width: 100%;
     padding-top: 56.25%;
     float: left;
     position: relative; }
-    .RYPP #RYPP-video > iframe {
+    .RYPP .RYPP-video > iframe {
       position: absolute;
       left: 0;
       top: 0;
       width: 100%;
       height: 100%;
       z-index: 2; }
-  .RYPP.r16-9 #RYPP-video {
+  .RYPP.r16-9 .RYPP-video {
     padding-top: 56.25%; }
-  .RYPP.r4-3 #RYPP-video {
+  .RYPP.r4-3 .RYPP-video {
     padding-top: 75%; }
-  .RYPP.r2-1 #RYPP-video {
+  .RYPP.r2-1 .RYPP-video {
     padding-top: 50%; }
   .RYPP .RYPP-items {
     width: 100%;

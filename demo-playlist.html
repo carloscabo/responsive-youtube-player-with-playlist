@@ -39,9 +39,11 @@
 
 <div class="wrapper">
 
-  <div class="RYPP r4-3" data-playlist="PL2591DC20C4BB4D78">
-    <div id="RYPP-video">
-      <div id="RYPP-video-player">
+  <p>Sample playlist player with default options (see README.MD)</p>
+
+  <div id="rypp-demo-1" class="RYPP r16-9" data-playlist="PL2591DC20C4BB4D78">
+    <div class="RYPP-video">
+      <div class="RYPP-video-player">
         <!-- Will be replaced -->
       </div>
     </div>
@@ -53,6 +55,46 @@
       <div class="RYPP-items"></div>
     </div>
   </div>
+
+  <br><br>
+
+  <p>Sample player with list of VideoIds (see README.MD)</p>
+
+  <div id="rypp-demo-2" class="RYPP r4-3" data-ids="HMpmI2F2cMs,intentionally_erroneus,QLXzSefzVWU,5RWb76pj4Do">
+    <div class="RYPP-video">
+      <div class="RYPP-video-player">
+        <!-- Will be replaced -->
+      </div>
+    </div>
+    <div class="RYPP-playlist">
+      <header>
+        <h2 class="_h1">Playlist title</h2>
+        <p>Playlist subtitle <a href="#" target="_blank">#hashtag</a></p>
+      </header>
+      <div class="RYPP-items"></div>
+    </div>
+  </div>
+
+  <br><br>
+
+  <p>This player has some custom options (see sourcecode)</p>
+
+  <div id="rypp-demo-3" class="RYPP r16-9" data-playlist="PLIdhMNCRXpCnkjiypT-RVTQO6qf1oZEZ1">
+    <div class="RYPP-video">
+      <div class="RYPP-video-player">
+        <!-- Will be replaced -->
+      </div>
+    </div>
+    <div class="RYPP-playlist">
+      <header>
+        <h2 class="_h1">Playlist title</h2>
+        <p>Playlist subtitle <a href="#" target="_blank">#hashtag</a></p>
+      </header>
+      <div class="RYPP-items"></div>
+    </div>
+  </div>
+
+  <br><br>
 
 </div><!-- wrapper -->
 
@@ -68,10 +110,17 @@
     // https://developers.google.com/youtube/v3/getting-started
     var api_key = 'AIzaSyA1rpTMrNjth1R6-LfLe0UG8v1946nj3Xw';
 
+    // Start all players on the page with default options
+    // $('.RYPP').rypp('AIzaSyA1rpTMrNjth1R6-LfLe0UG8v1946nj3Xw');
 
-    $('.RYPP').rypp(
-      'AIzaSyA1rpTMrNjth1R6-LfLe0UG8v1946nj3Xw',{
+    // Start two players by ID, with default settings
+    // $('#rypp-demo-1, #rypp-demo-2').rypp( api_key );
 
+    // Start two players by ID, with default settings
+    $('#rypp-demo-3').rypp( api_key ,{
+      autoplay: false,
+      loop: false,
+      mute: true
     });
 
   });

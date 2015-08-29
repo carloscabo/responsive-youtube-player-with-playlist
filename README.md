@@ -5,14 +5,14 @@ Responsive YouTube Player with Playlist
 
 **(RYPP)** Responsive YouTube Player with Playlist, title is self-explanatory ;-)
 
-[Playlist Demo](http://htmlpreview.github.io/?http://raw.githubusercontent.com/carloscabo/responsive-youtube-player-with-playlist/master/demo-playlist.html)
-
-[VideoId list demo](http://htmlpreview.github.io/?http://raw.githubusercontent.com/carloscabo/responsive-youtube-player-with-playlist/master/demo-id-list.html)
+[Demo](http://htmlpreview.github.io/?http://raw.githubusercontent.com/carloscabo/responsive-youtube-player-with-playlist/master/demo.html)
 
 ## Requirements
 
 `Jquery (1.9.1+)`
+
 `RYPP.js`
+
 `RYPP.css`
 
 ## IMPORTANT UPDATE: Youtube V.3 API KEY
@@ -37,8 +37,8 @@ Basic `HTML` element:
 
 ````html
 <div class="RYPP r4-3" data-playlist="PL2591DC20C4BB4D78">
-  <div id="RYPP-video">
-    <div id="RYPP-video-player">
+  <div class="RYPP-video">
+    <div class="RYPP-video-player">
       <!-- Will be replaced -->
     </div>
   </div>
@@ -57,13 +57,13 @@ Starting `RYPP` from JS:
 ````javascript
 $(document).ready(function() {
 
-  \\ Before initilize RYPP you need to set your API Key
+  \\ You need a valid API Key
   \\ In the creation process you can define in wich websites
   \\ can be used, to avoid unnapropiated uses
-  RYPP.api_key = 'AIzaSyA1rpTMrNjth1R6-LfLe0UG8v1946nj3Xw';
+  var api_key = 'AIzaSyA1rpTMrNjth1R6-LfLe0UG8v1946nj3Xw';
 
   \\ Initialize the player with default options
-  $('.RYPP').rypp();
+  $('.RYPP').rypp( api_key );
 });
 ````
 
@@ -81,7 +81,7 @@ You have several parameters you can pass on RYPP start to control some basic beh
 
 ````javascript
 
-$('.RYPP').rypp({
+$('.RYPP').rypp( '{{YOUR_API_KEY_HERE}}', {
 
   // Player starts automatically on first video
   autoplay: true, // Default

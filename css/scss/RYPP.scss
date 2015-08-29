@@ -6,7 +6,7 @@ $play_list_head_h: 64px;
 // Width
 $playlist_width: 250px;
 
-// Color
+// Colorw
 $col_main_bg: #1a1a1a;
 $col_main_text: #999;
 
@@ -28,11 +28,12 @@ $font_base: Arial, Helvetica, sans-serif;
   color: $col_main_text;
 
   // Main video box
-  #RYPP-video {
+  .RYPP-video {
     width: 100%;
     padding-top: 56.25%;
     float: left;
     position: relative;
+
     > iframe {
       position: absolute;
       left: 0;
@@ -44,19 +45,19 @@ $font_base: Arial, Helvetica, sans-serif;
   }
 
   &.r16-9 {
-    #RYPP-video {
+    .RYPP-video {
       padding-top: 56.25%;
     }
   }
 
   &.r4-3 {
-    #RYPP-video {
+    .RYPP-video {
       padding-top: 75%;
     }
   }
 
   &.r2-1 {
-    #RYPP-video {
+    .RYPP-video {
       padding-top: 50%;
     }
   }
