@@ -11,8 +11,6 @@ var RYPP = (function($, undefined) {
     if (typeof api_key === 'undefined') {
       console.log("Youtube API V3 requires a valid API KEY.\nFollow the instructions at: https://developers.google.com/youtube/v3/getting-started");
       return false;
-    } else {
-      this.api_key = api_key;
     }
 
     // DOM Elements container
@@ -32,13 +30,16 @@ var RYPP = (function($, undefined) {
     };
 
     // Initialize
-    this.init(el, options);
+    this.init(el, api_key, options);
   }
 
   // Prototype for the instance
   Rypp.prototype = {
 
-    init: function(el, options) {
+    init: function(el, api_key, options) {
+
+      // Api key
+      this.api_key = api_key;
 
       // Default options
       this.options.autoplay = true;
