@@ -5,6 +5,7 @@
 */
 
 var RYPP = (function($, undefined) {
+  'use strict';
 
   function Rypp(el, api_key, options) {
 
@@ -78,6 +79,7 @@ var RYPP = (function($, undefined) {
         tag.src = 'http://www.youtube.com/player_api';
         hID.appendChild(tag);
       }
+
     },
 
     onYouTubeIframeAPIReady: function() {
@@ -187,10 +189,14 @@ var RYPP = (function($, undefined) {
         },
         success: function(data){
 
-          for (i = 0, len = data.items.length; i < len; i++) {
+          // console.log(data.items);
+
+          for (var i = 0, len = data.items.length; i < len; i++) {
             var item = data.items[i];
+
             // Videos without thumbnail were deleted!
             if (typeof item.snippet.thumbnails !== 'undefined') {
+
               var
                 vid  = null,
                 tit  = item.snippet.title,
@@ -249,19 +255,17 @@ var RYPP = (function($, undefined) {
 
 }(jQuery));
 
-// Here will be stored all the instances of RYPP in the page
-var RYPP_instances = [];
-
 // YOUTUBE API CALLBACK
 function onYouTubeIframeAPIReady() {
-  for (var i = RYPP_instances.length - 1; i >= 0; i--) {
-    RYPP_instances[i].onYouTubeIframeAPIReady();
-  }
+  $('[data-rypp]').each(function(idx, el) {
+    $(el)[0].rypp_data_obj.onYouTubeIframeAPIReady();
+  });
 }
 
 // JQuery hook
 $.fn.rypp = function(api_key, options) {
   return this.each(function() {
-    RYPP_instances.push(new RYPP(this, api_key, options));
+    // Store object in DOM element
+    this.rypp_data_obj = new RYPP(this, api_key, options);
   });
 };
