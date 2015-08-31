@@ -42,10 +42,12 @@ var RYPP = (function($, undefined) {
       this.api_key = api_key;
 
       // Default options
-      this.options.autoplay = true;
-      this.options.autonext = true;
-      this.options.loop = true;
-      this.options.mute = false;
+      this.options = {
+        autoplay: true,
+        autonext: true,
+        loop: true,
+        mute: false
+      };
 
       // Merge initial options
       if (typeof options !== 'undefined') {
@@ -56,14 +58,15 @@ var RYPP = (function($, undefined) {
       this.ytplayer = null;
 
       // DOM elements
+      this.DOM = {};
       this.DOM.$el = $(el);
-      this.DOM.$playlc = $(el).find('.RYPP-playlist');
-      this.DOM.$items  = $(el).find('.RYPP-items');
-      this.DOM.$videoc = $(el).find('.RYPP-video');
+      this.DOM.$playlc = this.DOM.$el.find('.RYPP-playlist');
+      this.DOM.$items =  this.DOM.$el.find('.RYPP-items');
+      this.DOM.$videoc = this.DOM.$el.find('.RYPP-video');
 
       // Unique player ID
-      this.data.player_uid = 'RYPP-vp-'+(Math.random().toString(16).substr(2,8));
-      this.DOM.$el.find('.RYPP-video-player').attr('id',this.data.player_uid);
+      this.data.player_uid = (Math.random().toString(16).substr(2,8));
+      this.DOM.$el.attr('data-rypp',this.data.player_uid).find('.RYPP-video-player').attr('id','RYPP-vp-'+this.data.player_uid);
 
       // Link JS only once
       if (typeof YT === 'undefined') {
@@ -72,12 +75,9 @@ var RYPP = (function($, undefined) {
           hID = document.getElementsByTagName('head')[0];
         // Add youtube API in HEAD
         // tag.src = "https://www.youtube.com/iframe_api";
-        tag.src = "http://www.youtube.com/player_api";
+        tag.src = 'http://www.youtube.com/player_api';
         hID.appendChild(tag);
       }
-
-      // Empty playlist
-      this.DOM.$items.html('').append($('<ol>'));
     },
 
     onYouTubeIframeAPIReady: function() {
@@ -85,9 +85,12 @@ var RYPP = (function($, undefined) {
     },
 
     populatePlaylist: function() {
+      // Empty playlist
+      this.DOM.$items.html('').append($('<ol>'));
+
       // Now we read the video list from playlist data or from IDs...
       if (this.DOM.$el.attr('data-playlist')) {
-        this.get_videos_from(
+        this.getVideosFrom(
           'playlist',
           this.DOM.$el.attr('data-playlist')
         );
@@ -95,7 +98,7 @@ var RYPP = (function($, undefined) {
         var vl = this.DOM.$el.attr('data-ids');
         // Clean spaces
         vl = ($.map(vl.split(','),$.trim)).join(',');
-        this.get_videos_from(
+        this.getVideosFrom(
           'videolist',
           vl
         );
@@ -105,7 +108,7 @@ var RYPP = (function($, undefined) {
     addAPIPlayer: function() {
       var that = this;
 
-      this.ytplayer = new YT.Player(this.data.player_uid, {
+      this.ytplayer = new YT.Player('RYPP-vp-'+this.data.player_uid, {
         // height: '390',
         // width: '640',
         playerVars: {
@@ -133,7 +136,7 @@ var RYPP = (function($, undefined) {
 
     // Ready to play
     onPlayerReady: function() {
-      this.start_playl();
+      this.startPlayList();
     },
 
     // When video finish
@@ -169,7 +172,7 @@ var RYPP = (function($, undefined) {
     },
 
     // Get video from data-ids or playlist
-    get_videos_from: function(kind, resources_id) {
+    getVideosFrom: function(kind, resources_id) {
       var
         that = this,
         url  = this.data.ytapi[kind].replace('{{RESOURCES_ID}}', resources_id).replace('{{YOUR_API_KEY}}', this.api_key);
@@ -184,8 +187,8 @@ var RYPP = (function($, undefined) {
         },
         success: function(data){
 
-          $.each(data.items, function(idx, item) {
-
+          for (i = 0, len = data.items.length; i < len; i++) {
+            var item = data.items[i];
             // Videos without thumbnail were deleted!
             if (typeof item.snippet.thumbnails !== 'undefined') {
               var
@@ -200,9 +203,9 @@ var RYPP = (function($, undefined) {
                 // Elemento de playlist
                 vid =  item.snippet.resourceId.videoId;
               }
-              that.add_vid_to_playl(vid, tit, aut, thu);
+              that.addVideo2Playlist(vid, tit, aut, thu);
             }
-          });
+          }
           that.addAPIPlayer();
         }
       });
@@ -210,7 +213,7 @@ var RYPP = (function($, undefined) {
 
     // All videos are supossed to be loaded
     // lets start the playlist
-    start_playl: function() {
+    startPlayList: function() {
 
       var
         D = this.DOM,
@@ -234,7 +237,7 @@ var RYPP = (function($, undefined) {
     },
 
     // Add video block to playlist
-    add_vid_to_playl: function(vid, tit, aut, thu) {
+    addVideo2Playlist: function(vid, tit, aut, thu) {
       var
         D  = this.DOM;
       $('<li data-video-id="'+vid+'"><p class="title">'+tit+'<small class="author"><br>'+aut+'</small></p><img src="'+thu+'" class="thumb"></li>').appendTo(D.$items.find('ol'));
