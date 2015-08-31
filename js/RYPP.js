@@ -1,5 +1,5 @@
 /*
-  Youtube Player with Playlist (v2.1)
+  Youtube Player with Playlist (v2.15)
   https://github.com/carloscabo/responsive-youtube-player-with-playlist
   by Carlos Cabo (@putuko)
 */
@@ -25,7 +25,7 @@ var RYPP = (function($, undefined) {
       // Playlist url
       ytapi: {
         playlist: 'https://www.googleapis.com/youtube/v3/playlistItems?part=snippet&maxResults=50&playlistId={{RESOURCES_ID}}&key={{YOUR_API_KEY}}',
-        videolist: 'https://www.googleapis.com/youtube/v3/videos?part=snippet&maxResults=50&id={{RESOURCES_ID}}&key={{YOUR_API_KEY}}'
+        videolist: 'https://www.googleapis.com/youtube/v3/videos?part=snippet,status&maxResults=50&id={{RESOURCES_ID}}&key={{YOUR_API_KEY}}'
       },
       firsttime: true
     };
@@ -173,7 +173,9 @@ var RYPP = (function($, undefined) {
 
     },
 
+
     // Get video from data-ids or playlist
+    // It's impossible to know if a video in a playlist its available or currently deleted. So we do 2 request, first we get all the video IDs an then we ask for info about them.
     getVideosFrom: function(kind, resources_id) {
       var
         that = this,
@@ -189,30 +191,39 @@ var RYPP = (function($, undefined) {
         },
         success: function(data){
 
-          // console.log(data.items);
+          // We queried for a playlist
+          if (data.kind === 'youtube#playlistItemListResponse') {
 
-          for (var i = 0, len = data.items.length; i < len; i++) {
-            var item = data.items[i];
-
-            // Videos without thumbnail were deleted!
-            if (typeof item.snippet.thumbnails !== 'undefined') {
-
-              var
-                vid  = null,
-                tit  = item.snippet.title,
-                aut  = item.snippet.channelTitle,
-                thu  = item.snippet.thumbnails.default.url;
-              if (typeof item.snippet.resourceId === 'undefined') {
-                // ID de un vídeo
-                vid = item.id;
-              } else {
-                // Elemento de playlist
-                vid =  item.snippet.resourceId.videoId;
+            // We get the video IDs and query gain, its the only way to be sure that all the videos are available, and not were deleted :(
+            var vl = $.map(data.items, function(val,idx) {
+              if (typeof val.snippet.resourceId.videoId !== 'undefined') {
+                return val.snippet.resourceId.videoId;
               }
-              that.addVideo2Playlist(vid, tit, aut, thu);
+            }).join(',');
+
+            that.getVideosFrom('videolist',vl);
+
+          } else if (data.kind === 'youtube#videoListResponse') {
+
+            // Videos froma  Videolist
+            for (var i = 0, len = data.items.length; i < len; i++) {
+              var item = data.items[i];
+
+              // Videos without thumbnail, deleted or rejected are not included in the player!
+              if (
+                $.inArray(item.status.uploadStatus, ['rejected', 'deleted', 'failed']) === -1 &&
+                typeof item.snippet.thumbnails !== 'undefined'
+              ) {
+                var
+                  vid = item.id,
+                  tit = item.snippet.title,
+                  aut = item.snippet.channelTitle,
+                  thu = item.snippet.thumbnails.default.url;
+                that.addVideo2Playlist(vid, tit, aut, thu);
+              }
             }
+            that.addAPIPlayer();
           }
-          that.addAPIPlayer();
         }
       });
     },
