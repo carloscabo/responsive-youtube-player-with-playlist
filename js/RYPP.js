@@ -76,7 +76,7 @@ var RYPP = (function($, undefined) {
           hID = document.getElementsByTagName('head')[0];
         // Add youtube API in HEAD
         // tag.src = "https://www.youtube.com/iframe_api";
-        tag.src = 'http://www.youtube.com/player_api';
+        tag.src = 'https://www.youtube.com/player_api';
         hID.appendChild(tag);
       }
 
