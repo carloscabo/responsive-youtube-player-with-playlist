@@ -1,5 +1,5 @@
 /*
-  Youtube Player with Playlist (v2.15)
+  Youtube Player with Playlist (v2.16)
   https://github.com/carloscabo/responsive-youtube-player-with-playlist
   by Carlos Cabo (@putuko)
 */
@@ -27,7 +27,8 @@ var RYPP = (function($, undefined) {
         playlist: 'https://www.googleapis.com/youtube/v3/playlistItems?part=snippet&maxResults=50&playlistId={{RESOURCES_ID}}&key={{YOUR_API_KEY}}',
         videolist: 'https://www.googleapis.com/youtube/v3/videos?part=snippet,status&maxResults=50&id={{RESOURCES_ID}}&key={{YOUR_API_KEY}}'
       },
-      firsttime: true
+      firsttime: true,
+      ismobile: (typeof window.orientation !== 'undefined')
     };
 
     // Initialize
@@ -143,31 +144,39 @@ var RYPP = (function($, undefined) {
 
     // When video finish
     onPlayerStateChange: function(e){
+      var
+        that = this;
 
       if (typeof e !== 'undefined') {
 
         // On video loaded?
         if(e.data === -1 && this.data.firsttime) {
-          if(!this.options.autoplay) {
+          if(!this.options.autoplay && !this.data.ismobile) { // Is desktop
             this.ytplayer.pauseVideo();
+            this.data.firsttime = false;
           }
           if(this.options.mute) {
             this.ytplayer.mute();
           }
         }
 
-        // Play next
+        // If mobile and stored in buffer we STOP the video in mobile devices
+        if(e.data === 3 && this.data.ismobile && this.data.firsttime) {
+          setTimeout(function(){
+            that.ytplayer.stopVideo();
+            that.data.firsttime = false;
+          }, 500);
+        }
+
+        // Play next only if not mobile
         var next = null;
-        if(e.data === 0 && this.options.autonext) {
+        if(e.data === 0 && !this.data.ismobile && this.options.autonext) {
           next = this.DOM.$items.find('li.selected').next();
           if (next.length === 0 && this.options.loop) {
             next = this.DOM.$items.find('li').first();
           }
           next.click();
         }
-
-        // First video
-        this.data.firsttime = false;
 
       }
 
@@ -245,6 +254,10 @@ var RYPP = (function($, undefined) {
         vid = $(this).data('video-id');
         // Call YT API function
         that.ytplayer.loadVideoById(vid);
+        // If we are in mobile we must stop
+        if (that.data.ismobile) {
+          that.data.firsttime = true;
+        }
       });
 
       // Select first if none
