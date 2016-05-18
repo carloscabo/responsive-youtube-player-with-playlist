@@ -15,13 +15,20 @@ Responsive YouTube Player with Playlist (RYPP)
 
 `RYPP.css`
 
-## IMPORTANT UPDATE: Youtube V.3 API KEY
+## IMPORTANT (1): Youtube V.3 API KEY
 
 Since Youtube API V3.0, it's **mandatory** to create a YT API key in order to get the playlists contents programatically... there aren't other ways to do this. **The old XML Feed used in the V.01 of RYPP has been removed by Youtube and no longer exists**.
 
 In order to create your own API Key follow these intructions:
 <https://developers.google.com/youtube/v3/getting-started>
 (Remember to limit its usage you you site / domain)
+
+## IMPORTANT (2): Features disabled on mobile
+
+Several features have been **disabled in mobile devices** as Youtube is progressively disabling them:
+
+- **Autoplay** no longer works on mobile devices
+- **Autonext** no longer works on mobile devices
 
 ## TO-DO / Known issues
 
@@ -101,3 +108,6 @@ $('#RYPP-custom-player').rypp( '{{YOUR_API_KEY_HERE}}', {
 
 @frostcrazy & [@Vortizhe](https://github.com/vortizhe)
 
+## Changelog
+
+- 2016/05/18 v2.16 Disabling several mobile features causing troubles
