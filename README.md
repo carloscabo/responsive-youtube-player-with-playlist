@@ -49,8 +49,8 @@ Basic `HTML` element:
   </div>
   <div class="RYPP-playlist">
     <header>
-      <h2 class="_h1">Playlist title</h2>
-      <p>Playlist subtitle<a href="#" target="_blank">#hashtag</a></p>
+      <h2 class="_h1 RYPP-title">Playlist title</h2>
+      <p class="RYPP-desc">Playlist subtitle<a href="#" target="_blank">#hashtag</a></p>
     </header>
     <div class="RYPP-items"></div>
   </div>
@@ -88,6 +88,9 @@ You have several parameters you can pass on RYPP start to control some basic beh
 
 $('#RYPP-custom-player').rypp( '{{YOUR_API_KEY_HERE}}', {
 
+  // Automatically updates PL title description
+  update_title_desc: true, // Default false
+
   // Player starts automatically on first video
   autoplay: true, // Default
 
@@ -110,4 +113,5 @@ $('#RYPP-custom-player').rypp( '{{YOUR_API_KEY_HERE}}', {
 
 ## Changelog
 
+- 2016/05/18 v2.17 Fetch title / descriptions from palylist metadata
 - 2016/05/18 v2.16 Disabling several mobile features causing troubles

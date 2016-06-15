@@ -1,5 +1,5 @@
 /*
-  Youtube Player with Playlist (v2.16)
+  Youtube Player with Playlist (v2.17)
   https://github.com/carloscabo/responsive-youtube-player-with-playlist
   by Carlos Cabo (@putuko)
 */
@@ -24,6 +24,7 @@ var RYPP = (function($, undefined) {
     this.data = {
       // Playlist url
       ytapi: {
+        playlist_info: 'https://www.googleapis.com/youtube/v3/playlists?part=snippet&id={{RESOURCES_ID}}&key={{YOUR_API_KEY}}',
         playlist: 'https://www.googleapis.com/youtube/v3/playlistItems?part=snippet&maxResults=50&playlistId={{RESOURCES_ID}}&key={{YOUR_API_KEY}}',
         videolist: 'https://www.googleapis.com/youtube/v3/videos?part=snippet,status&maxResults=50&id={{RESOURCES_ID}}&key={{YOUR_API_KEY}}'
       },
@@ -45,6 +46,7 @@ var RYPP = (function($, undefined) {
 
       // Default options
       this.options = {
+        update_title_desc: false,
         autoplay: true,
         autonext: true,
         loop: true,
@@ -65,6 +67,8 @@ var RYPP = (function($, undefined) {
       this.DOM.$playlc = this.DOM.$el.find('.RYPP-playlist');
       this.DOM.$items =  this.DOM.$el.find('.RYPP-items');
       this.DOM.$videoc = this.DOM.$el.find('.RYPP-video');
+      this.DOM.$title  = this.DOM.$el.find('.RYPP-title');
+      this.DOM.$desc   = this.DOM.$el.find('.RYPP-desc');
 
       // Unique player ID
       this.data.player_uid = (Math.random().toString(16).substr(2,8));
@@ -84,7 +88,32 @@ var RYPP = (function($, undefined) {
     },
 
     onYouTubeIframeAPIReady: function() {
+      if( this.options.update_title_desc ) {
+        this.updateTitleDesc();
+      }
       this.populatePlaylist();
+    },
+
+    updateTitleDesc: function() {
+      var
+        that = this,
+        resources_id = this.DOM.$el.attr('data-playlist'),
+        url  = this.data.ytapi.playlist_info.replace('{{RESOURCES_ID}}', resources_id).replace('{{YOUR_API_KEY}}', this.api_key);
+
+      $.ajaxSetup ({cache: false});
+      $.ajax(url, {
+        context: this,
+        dataType: 'json',
+        crossDomain: true,
+        error: function(){
+          // Not successful
+        },
+        success: function(data){
+          // console.log(data);
+          this.DOM.$title.html( data.items[0].snippet.title );
+          this.DOM.$desc.html( data.items[0].snippet.description );
+        }
+      });
     },
 
     populatePlaylist: function() {

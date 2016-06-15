@@ -51,8 +51,8 @@
     </div>
     <div class="RYPP-playlist">
       <header>
-        <h2 class="_h1">Playlist title</h2>
-        <p>Playlist subtitle <a href="#" target="_blank">#hashtag</a></p>
+        <h2 class="_h1 RYPP-title">Playlist title</h2>
+        <p class="RYPP-desc">Playlist subtitle <a href="#" target="_blank">#hashtag</a></p>
       </header>
       <div class="RYPP-items"></div>
     </div>
@@ -70,8 +70,8 @@
     </div>
     <div class="RYPP-playlist">
       <header>
-        <h2 class="_h1">Playlist title</h2>
-        <p>Playlist subtitle <a href="#" target="_blank">#hashtag</a></p>
+        <h2 class="_h1 RYPP-title">Playlist title</h2>
+        <p class="RYPP-desc">Playlist subtitle <a href="#" target="_blank">#hashtag</a></p>
       </header>
       <div class="RYPP-items"></div>
     </div>
@@ -89,8 +89,8 @@
     </div>
     <div class="RYPP-playlist">
       <header>
-        <h2 class="_h1">Playlist title</h2>
-        <p>Playlist subtitle <a href="#" target="_blank">#hashtag</a></p>
+        <h2 class="_h1 RYPP-title">Playlist title</h2>
+        <p class="RYPP-desc">Playlist subtitle <a href="#" target="_blank">#hashtag</a></p>
       </header>
       <div class="RYPP-items"></div>
     </div>
@@ -117,10 +117,12 @@
 
     // Start two players by ID, with default settings
     $('#rypp-demo-1').rypp( api_key );
+
     $('#rypp-demo-2').rypp( api_key );
 
     // Start two players by ID, with default settings
     $('#rypp-demo-3').rypp( api_key ,{
+      update_title_desc: true, // Default false
       autoplay: false,
       loop: false,
       mute: true
