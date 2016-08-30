@@ -31,7 +31,8 @@ var RYPP = (function($, undefined) {
       },
       temp_vl: [], // Temporary videolist
       firsttime: true,
-      ismobile: (typeof window.orientation !== 'undefined')
+      ismobile: (typeof window.orientation !== 'undefined'),
+      ispopulated: false
     };
 
     // Initialize
@@ -60,9 +61,6 @@ var RYPP = (function($, undefined) {
         $.extend(this.options, options);
       }
 
-      // YT Player object
-      this.ytplayer = null;
-
       // DOM elements
       this.DOM = {};
       this.DOM.$el = $(el);
@@ -72,13 +70,16 @@ var RYPP = (function($, undefined) {
       this.DOM.$title  = this.DOM.$el.find('.RYPP-title');
       this.DOM.$desc   = this.DOM.$el.find('.RYPP-desc');
 
+      // YT Player object
+      this.DOM.$el[0].ytplayer = null;
+
       // Unique player ID
       this.data.player_uid = (Math.random().toString(16).substr(2,8));
       this.DOM.$el.attr('data-rypp',this.data.player_uid).find('.RYPP-video-player').attr('id','RYPP-vp-'+this.data.player_uid).attr('name','RYPP-vp-'+this.data.player_uid);
-      console.log('RYPP-vp-'+this.data.player_uid);
+      console.log('Unique ID: RYPP-vp-'+this.data.player_uid);
 
       // Link JS only once
-      if (typeof YT === 'undefined') {
+      if (typeof window.YT === 'undefined') {
         var
           tag = document.createElement('script'),
           hID = document.getElementsByTagName('head')[0];
@@ -86,15 +87,14 @@ var RYPP = (function($, undefined) {
         // tag.src = "https://www.youtube.com/iframe_api";
         tag.src = 'https://www.youtube.com/iframe_api?version=3';
         hID.appendChild(tag);
+      } else {
+        this.addAPIPlayer();
       }
 
     },
 
-    onYouTubeIframeAPIReady: function() {
-      if( this.options.update_title_desc ) {
-        this.updateTitleDesc();
-      }
-      this.populatePlaylist();
+    onYTIframeAPIReadyCallback: function() {
+      this.addAPIPlayer();
     },
 
     updateTitleDesc: function() {
@@ -120,7 +120,14 @@ var RYPP = (function($, undefined) {
     },
 
     populatePlaylist: function() {
+
+      if( this.options.update_title_desc ) {
+        console.log('Updating playlist title / desc');
+        this.updateTitleDesc();
+      }
+
       // Empty playlist
+      console.log('Populating playlist');
       this.DOM.$items.html('').append($('<ol>'));
 
       // Now we read the video list from playlist data or from IDs...
@@ -152,7 +159,7 @@ var RYPP = (function($, undefined) {
           // controls: 0,
           // showinfo: 0 ,
           // autoplay: 0,
-          html5: 1,
+          // html5: 1,
           enablejsapi: 1,
           rel: 0,
           modestbranding: 1,
@@ -160,7 +167,7 @@ var RYPP = (function($, undefined) {
         },
         events: {
           'onReady': function(){
-            console.log('new ytplayer ready');
+            console.log('New ytplayer ready');
             that.onPlayerReady();
           },
           'onStateChange': function(e){
@@ -175,7 +182,9 @@ var RYPP = (function($, undefined) {
 
     // Ready to play
     onPlayerReady: function() {
-      this.startPlayList();
+      console.log('New ytplayer ready callback');
+      this.populatePlaylist();
+      // this.startPlayList();
     },
 
     // When video finish
@@ -188,18 +197,18 @@ var RYPP = (function($, undefined) {
         // On video loaded?
         if(e.data === -1 && this.data.firsttime) {
           if(!this.options.autoplay && !this.data.ismobile) { // Is desktop
-            this.ytplayer.stopVideo();
+            this.DOM.$el[0].ytplayer.stopVideo();
             this.data.firsttime = false;
           }
           if(this.options.mute) {
-            this.ytplayer.mute();
+            this.DOM.$el[0].ytplayer.mute();
           }
         }
 
         // If mobile and stored in buffer we STOP the video in mobile devices
         if(e.data === 3 && this.data.ismobile && this.data.firsttime) {
           setTimeout(function(){
-            that.ytplayer.stopVideo();
+            that.DOM.$el[0].ytplayer.stopVideo();
             that.data.firsttime = false;
           }, 500);
         }
@@ -289,7 +298,7 @@ var RYPP = (function($, undefined) {
                 that.addVideo2Playlist(vid, tit, aut, thu);
               }
               if ( $.isEmptyObject( that.data.temp_vl ) ) {
-                that.addAPIPlayer();
+                this.startPlayList();
               }
             }
           }
@@ -313,7 +322,7 @@ var RYPP = (function($, undefined) {
         $(this).addClass('selected');
         vid = $(this).data('video-id');
         // Call YT API function
-        that.ytplayer.loadVideoById(vid);
+        that.DOM.$el[0].ytplayer.loadVideoById(vid);
         // If we are in mobile we must stop
         if (that.data.ismobile) {
           that.data.firsttime = true;
@@ -343,7 +352,7 @@ var RYPP = (function($, undefined) {
 function onYouTubeIframeAPIReady() {
   console.log( 'Youtube API script loaded. Start players.' );
   $('[data-rypp]').each(function(idx, el) {
-    $(el)[0].rypp_data_obj.onYouTubeIframeAPIReady();
+    $(el)[0].rypp_data_obj.onYTIframeAPIReadyCallback();
   });
 }
 

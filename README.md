@@ -32,7 +32,7 @@ Several features have been **disabled in mobile devices** as Youtube is progress
 
 ## TO-DO / Known issues
 
-1. By default playlist JSON response its limited to 50 items, so you cannot retrieve more than 50 items from a playlist.
+1. By default videoId list JSON response its limited to 50 items, so you cannot retrieve more than 50 videos at once, so if you need more than 50 items, go to Youtube and create a playlist. **Now RYPP supports playlist with unlimited number of videos**.
 
 2. Testing in IE. Right now its only tested in Chrome / Firefox. Any bug report or contribution will be great apretiated.
 
@@ -55,6 +55,15 @@ Basic `HTML` element:
     <div class="RYPP-items"></div>
   </div>
 </div>
+````
+
+Basic `HTML` element using VideoIDs instead a playlistId (limited to 50 videos):
+
+````html
+<div class="RYPP r4-3" data-ids="HMpmI2F2cMs,intentionally_erroneus,QLXzSefzVWU,5RWb76pj4Do">
+  <div class="RYPP-video">
+    <div class="RYPP-video-player">
+      ...
 ````
 
 Starting `RYPP` from JS:
@@ -80,7 +89,7 @@ Aspect ratio of the YouTube video is set by adding an additional CSS class to th
 ID of the YouTube playlist, RYPP will automatically get its data and thumbnails and populate the list on the right with them. Take a look to `demo-playlist.htm`.
 
 `data-ids="hWGUnrIiOoI,7nXcLBXR70M"`
-Alternativelly to the playlist you can provide a list of **comma-separated ids** of the YouTube vídeos you want to add to the playlist. Take a look to `demo.htm`.
+Alternativelly to the playlist you can provide a list of **comma-separated ids** of the YouTube vídeos you want to add to the playlist. Take a look to `demo.htm`. This method **is limited to a maximun of 50 vídeos, if you need more, please create a playlist yourself and use the previuos method**.
 
 You have several parameters you can pass on RYPP start to control some basic behaviours...
 
@@ -113,7 +122,7 @@ $('#RYPP-custom-player').rypp( '{{YOUR_API_KEY_HERE}}', {
 
 ## Changelog
 
-- 2016/08/30 v2.20 Playlist with +50 vídeos
+- 2016/08/30 v2.20 Support for Playlists with +50 vídeos
 - 2016/06/16 v2.18 Solved infinite loading on some situations
 - 2016/06/08 v2.17 Fetch title / descriptions from palylist metadata
 - 2016/05/18 v2.16 Disabling several mobile features causing troubles
