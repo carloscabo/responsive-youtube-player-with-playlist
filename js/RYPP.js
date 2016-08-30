@@ -1,5 +1,5 @@
 /*
-  Youtube Player with Playlist (v2.18)
+  Youtube Player with Playlist (v2.20)
   https://github.com/carloscabo/responsive-youtube-player-with-playlist
   by Carlos Cabo (@putuko)
 */
@@ -26,10 +26,13 @@ var RYPP = (function($, undefined) {
       ytapi: {
         playlist_info: 'https://www.googleapis.com/youtube/v3/playlists?part=snippet&id={{RESOURCES_ID}}&key={{YOUR_API_KEY}}',
         playlist: 'https://www.googleapis.com/youtube/v3/playlistItems?part=snippet&maxResults=50&playlistId={{RESOURCES_ID}}&key={{YOUR_API_KEY}}',
-        videolist: 'https://www.googleapis.com/youtube/v3/videos?part=snippet,status&maxResults=50&id={{RESOURCES_ID}}&key={{YOUR_API_KEY}}'
+        pl_ID: '',
+        videolist: 'https://www.googleapis.com/youtube/v3/videos?part=snippet,status&maxResults=50&id={{RESOURCES_ID}}&key={{YOUR_API_KEY}}',
       },
+      temp_vl: [], // Temporary videolist
       firsttime: true,
-      ismobile: (typeof window.orientation !== 'undefined')
+      ismobile: (typeof window.orientation !== 'undefined'),
+      ispopulated: false
     };
 
     // Initialize
@@ -50,16 +53,14 @@ var RYPP = (function($, undefined) {
         autoplay: true,
         autonext: true,
         loop: true,
-        mute: false
+        mute: false,
+        debug: false
       };
 
       // Merge initial options
       if (typeof options !== 'undefined') {
         $.extend(this.options, options);
       }
-
-      // YT Player object
-      this.ytplayer = null;
 
       // DOM elements
       this.DOM = {};
@@ -70,28 +71,31 @@ var RYPP = (function($, undefined) {
       this.DOM.$title  = this.DOM.$el.find('.RYPP-title');
       this.DOM.$desc   = this.DOM.$el.find('.RYPP-desc');
 
+      // YT Player object
+      this.DOM.$el[0].ytplayer = null;
+
       // Unique player ID
       this.data.player_uid = (Math.random().toString(16).substr(2,8));
-      this.DOM.$el.attr('data-rypp',this.data.player_uid).find('.RYPP-video-player').attr('id','RYPP-vp-'+this.data.player_uid);
+      this.DOM.$el.attr('data-rypp',this.data.player_uid).find('.RYPP-video-player').attr('id','RYPP-vp-'+this.data.player_uid).attr('name','RYPP-vp-'+this.data.player_uid);
+      if (this.options.debug) console.log('Unique ID: RYPP-vp-'+this.data.player_uid);
 
       // Link JS only once
-      if (typeof YT === 'undefined') {
+      if (typeof window.YT === 'undefined') {
         var
           tag = document.createElement('script'),
           hID = document.getElementsByTagName('head')[0];
         // Add youtube API in HEAD
         // tag.src = "https://www.youtube.com/iframe_api";
-        tag.src = 'https://www.youtube.com/player_api';
+        tag.src = 'https://www.youtube.com/iframe_api?version=3';
         hID.appendChild(tag);
+      } else {
+        this.addAPIPlayer();
       }
 
     },
 
-    onYouTubeIframeAPIReady: function() {
-      if( this.options.update_title_desc ) {
-        this.updateTitleDesc();
-      }
-      this.populatePlaylist();
+    onYTIframeAPIReadyCallback: function() {
+      this.addAPIPlayer();
     },
 
     updateTitleDesc: function() {
@@ -117,14 +121,22 @@ var RYPP = (function($, undefined) {
     },
 
     populatePlaylist: function() {
+
+      if( this.options.update_title_desc ) {
+        if (this.options.debug) console.log(this.data.player_uid+': Updating playlist title / desc');
+        this.updateTitleDesc();
+      }
+
       // Empty playlist
+      if (this.options.debug) console.log(this.data.player_uid+': Populating playlist');
       this.DOM.$items.html('').append($('<ol>'));
 
       // Now we read the video list from playlist data or from IDs...
       if (this.DOM.$el.attr('data-playlist')) {
+        this.data.pl_ID = this.DOM.$el.attr('data-playlist');
         this.getVideosFrom(
           'playlist',
-          this.DOM.$el.attr('data-playlist')
+          this.data.pl_ID
         );
       } else if (this.DOM.$el.attr('data-ids')) {
         var vl = this.DOM.$el.attr('data-ids');
@@ -140,13 +152,15 @@ var RYPP = (function($, undefined) {
     addAPIPlayer: function() {
       var that = this;
 
-      this.ytplayer = new YT.Player('RYPP-vp-'+this.data.player_uid, {
+      window.YTConfig = { 'host': 'https://www.youtube.com' };
+      this.DOM.$el[0].ytplayer = new YT.Player('RYPP-vp-'+that.data.player_uid, {
         // height: '390',
         // width: '640',
         playerVars: {
           // controls: 0,
           // showinfo: 0 ,
           // autoplay: 0,
+          // html5: 1,
           enablejsapi: 1,
           rel: 0,
           modestbranding: 1,
@@ -154,6 +168,7 @@ var RYPP = (function($, undefined) {
         },
         events: {
           'onReady': function(){
+            if (that.options.debug)console.log(that.data.player_uid+': ytplayer ready');
             that.onPlayerReady();
           },
           'onStateChange': function(e){
@@ -168,7 +183,9 @@ var RYPP = (function($, undefined) {
 
     // Ready to play
     onPlayerReady: function() {
-      this.startPlayList();
+      if (this.options.debug) console.log(this.data.player_uid+': ytplayer ready callback');
+      this.populatePlaylist();
+      // this.startPlayList();
     },
 
     // When video finish
@@ -181,18 +198,18 @@ var RYPP = (function($, undefined) {
         // On video loaded?
         if(e.data === -1 && this.data.firsttime) {
           if(!this.options.autoplay && !this.data.ismobile) { // Is desktop
-            this.ytplayer.stopVideo();
+            this.DOM.$el[0].ytplayer.stopVideo();
             this.data.firsttime = false;
           }
           if(this.options.mute) {
-            this.ytplayer.mute();
+            this.DOM.$el[0].ytplayer.mute();
           }
         }
 
         // If mobile and stored in buffer we STOP the video in mobile devices
         if(e.data === 3 && this.data.ismobile && this.data.firsttime) {
           setTimeout(function(){
-            that.ytplayer.stopVideo();
+            that.DOM.$el[0].ytplayer.stopVideo();
             that.data.firsttime = false;
           }, 500);
         }
@@ -214,10 +231,14 @@ var RYPP = (function($, undefined) {
 
     // Get video from data-ids or playlist
     // It's impossible to know if a video in a playlist its available or currently deleted. So we do 2 request, first we get all the video IDs an then we ask for info about them.
-    getVideosFrom: function(kind, resources_id) {
+    getVideosFrom: function(kind, resources_id, page_token) {
       var
         that = this,
         url  = this.data.ytapi[kind].replace('{{RESOURCES_ID}}', resources_id).replace('{{YOUR_API_KEY}}', this.api_key);
+
+      if (typeof page_token !== 'undefined') {
+        url += '&pageToken=' + page_token;
+      }
 
       $.ajaxSetup ({cache: false});
       $.ajax(url, {
@@ -232,14 +253,32 @@ var RYPP = (function($, undefined) {
           // We queried for a playlist
           if (data.kind === 'youtube#playlistItemListResponse') {
 
-            // We get the video IDs and query gain, its the only way to be sure that all the videos are available, and not were deleted :(
-            var vl = $.map(data.items, function(val,idx) {
-              if (typeof val.snippet.resourceId.videoId !== 'undefined') {
-                return val.snippet.resourceId.videoId;
-              }
-            }).join(',');
+            var video_set = [];
 
-            that.getVideosFrom('videolist',vl);
+            // We get the video IDs and query gain, its the only way to be sure that all the videos are available, and not were deleted :(
+            $.map(data.items, function(val,idx) {
+              if (typeof val.snippet.resourceId.videoId !== 'undefined') {
+                // Add video to temporary list
+                video_set.push( val.snippet.resourceId.videoId );
+                // return val.snippet.resourceId.videoId;
+              }
+            });
+            that.data.temp_vl.push( video_set );
+
+            // If there are several pages we ask for next
+            if (typeof data.nextPageToken !== 'undefined' && data.nextPageToken !== '') {
+              that.getVideosFrom(
+                'playlist',
+                that.data.pl_ID,
+                data.nextPageToken
+              );
+            } else {
+              // No more pages... we process the videos
+              for (var j = 0, len_pl = that.data.temp_vl.length; j < len_pl; j++) {
+                video_set = that.data.temp_vl.shift();
+                that.getVideosFrom('videolist', video_set.join(','));
+              }
+            }
 
           } else if (data.kind === 'youtube#videoListResponse') {
 
@@ -259,8 +298,10 @@ var RYPP = (function($, undefined) {
                   thu = item.snippet.thumbnails.default.url;
                 that.addVideo2Playlist(vid, tit, aut, thu);
               }
+              if ( $.isEmptyObject( that.data.temp_vl ) ) {
+                this.startPlayList();
+              }
             }
-            that.addAPIPlayer();
           }
         }
       });
@@ -282,7 +323,7 @@ var RYPP = (function($, undefined) {
         $(this).addClass('selected');
         vid = $(this).data('video-id');
         // Call YT API function
-        that.ytplayer.loadVideoById(vid);
+        that.DOM.$el[0].ytplayer.loadVideoById(vid);
         // If we are in mobile we must stop
         if (that.data.ismobile) {
           that.data.firsttime = true;
@@ -310,8 +351,9 @@ var RYPP = (function($, undefined) {
 
 // YOUTUBE API CALLBACK
 function onYouTubeIframeAPIReady() {
+  // console.log( 'Youtube API script loaded. Start players.' );
   $('[data-rypp]').each(function(idx, el) {
-    $(el)[0].rypp_data_obj.onYouTubeIframeAPIReady();
+    $(el)[0].rypp_data_obj.onYTIframeAPIReadyCallback();
   });
 }
 
