@@ -112,6 +112,9 @@ $('#RYPP-custom-player').rypp( '{{YOUR_API_KEY_HERE}}', {
   // Starts the player without sound
   mute: false     // Default
 
+  // Logs debug messages in console
+  debug: false     // Default
+
 });
 
 ````
@@ -122,7 +125,7 @@ $('#RYPP-custom-player').rypp( '{{YOUR_API_KEY_HERE}}', {
 
 ## Changelog
 
-- 2016/08/30 v2.20 Support for Playlists with +50 vídeos
+- 2016/08/30 v2.20 Support for Playlists with +50 vídeos (beta)
 - 2016/06/16 v2.18 Solved infinite loading on some situations
 - 2016/06/08 v2.17 Fetch title / descriptions from palylist metadata
 - 2016/05/18 v2.16 Disabling several mobile features causing troubles

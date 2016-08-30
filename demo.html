@@ -43,7 +43,7 @@
 
 <div class="wrapper">
 
-  <p>Sample playlist with 100 vídeos. Aspect ratio 16:9 (see README.md)</p>
+  <p><b>rypp-demo-4:</b> Sample playlist with 100 vídeos. Aspect ratio 16:9 (see README.md)</p>
 
   <div id="rypp-demo-4" class="RYPP r16-9" data-playlist="PLg5ScSqSDXssRwFxw2FihfGfGg2A_ky96">
     <div class="RYPP-video">
@@ -62,7 +62,7 @@
 
   <br><br>
 
-  <p>Sample playlist player with default options. Aspect ratio 16:9 (see README.md)</p>
+  <p><b>rypp-demo-1:</b> Sample playlist player with default options. Aspect ratio 16:9 (see README.md)</p>
 
   <div id="rypp-demo-1" class="RYPP r16-9" data-playlist="PL2591DC20C4BB4D78">
     <div class="RYPP-video">
@@ -81,7 +81,7 @@
 
   <br><br>
 
-  <p>Sample player with list of VideoIds with default options. Aspect ratio 4:3 (see README.md)</p>
+  <p><b>rypp-demo-2: </b>Sample player with list of VideoIds with default options. Aspect ratio 4:3 (see README.md)</p>
 
   <div id="rypp-demo-2" class="RYPP r4-3" data-ids="HMpmI2F2cMs,intentionally_erroneus,QLXzSefzVWU,5RWb76pj4Do">
     <div class="RYPP-video">
@@ -100,7 +100,7 @@
 
   <br><br>
 
-  <p>Player has some custom options (autoplay = false, mute = true, loop = false...) See sourcecode and README.md.</p>
+  <p><b>rypp-demo-3:</b> Player has some custom options (autoplay = false, mute = true, loop = false...) See sourcecode and README.md.</p>
 
   <div id="rypp-demo-3" class="RYPP r16-9" data-playlist="PLBABE45CEB8F38F98">
     <div class="RYPP-video">
@@ -137,21 +137,22 @@
     // $('.RYPP').rypp('AIzaSyA1rpTMrNjth1R6-LfLe0UG8v1946nj3Xw');
 
     // Start two players by ID, with default settings
-    // $('#rypp-demo-1').rypp( window.api_key );
+    $('#rypp-demo-1').rypp( window.api_key, { debug: true } );
 
-    // $('#rypp-demo-2').rypp( window.api_key );
+    $('#rypp-demo-2').rypp( window.api_key, { debug: true } );
 
     // Start two players by ID, with default settings
-    // $('#rypp-demo-3').rypp( api_key ,{
-    //   update_title_desc: true, // Default false
-    //   autoplay: false,
-    //   autonext: false,
-    //   loop: false,
-    //   mute: true
-    // });
+    $('#rypp-demo-3').rypp( api_key ,{
+      update_title_desc: true, // Default false
+      autoplay: false,
+      autonext: false,
+      loop: false,
+      mute: true,
+      debug: false
+    });
 
     // 100 videos in playlist
-    // $('#rypp-demo-4').rypp( window.api_key );
+    $('#rypp-demo-4').rypp( window.api_key, { debug: true } );
 
   });
 </script>
