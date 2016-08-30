@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
   <meta name="apple-mobile-web-app-capable" content="yes">
+
   <title>Document</title>
   <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/normalize/3.0.1/normalize.min.css">
   <link rel="stylesheet" href="css/RYPP.css">
@@ -36,6 +37,7 @@
   }
 
   </style>
+
 </head>
 <body>
 
@@ -132,7 +134,7 @@
     // This key only works for this demo on GitHub
     // You must create your own at:
     // https://developers.google.com/youtube/v3/getting-started
-    var api_key = 'AIzaSyA1rpTMrNjth1R6-LfLe0UG8v1946nj3Xw';
+    window.api_key = 'AIzaSyA1rpTMrNjth1R6-LfLe0UG8v1946nj3Xw';
 
     // Start all players on the page with default options
     // $('.RYPP').rypp('AIzaSyA1rpTMrNjth1R6-LfLe0UG8v1946nj3Xw');
@@ -152,7 +154,7 @@
     // });
 
     // 100 videos in playlist
-    $('#rypp-demo-4').rypp( api_key );
+    // $('#rypp-demo-4').rypp( api_key );
 
   });
 </script>

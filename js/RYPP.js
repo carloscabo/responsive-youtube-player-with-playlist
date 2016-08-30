@@ -74,7 +74,8 @@ var RYPP = (function($, undefined) {
 
       // Unique player ID
       this.data.player_uid = (Math.random().toString(16).substr(2,8));
-      this.DOM.$el.attr('data-rypp',this.data.player_uid).find('.RYPP-video-player').attr('id','RYPP-vp-'+this.data.player_uid);
+      this.DOM.$el.attr('data-rypp',this.data.player_uid).find('.RYPP-video-player').attr('id','RYPP-vp-'+this.data.player_uid).attr('name','RYPP-vp-'+this.data.player_uid);
+      console.log('RYPP-vp-'+this.data.player_uid);
 
       // Link JS only once
       if (typeof YT === 'undefined') {
@@ -144,13 +145,14 @@ var RYPP = (function($, undefined) {
       var that = this;
 
       window.YTConfig = { 'host': 'https://www.youtube.com' };
-      that.ytplayer = new YT.Player('RYPP-vp-'+that.data.player_uid, {
+      this.DOM.$el[0].ytplayer = new YT.Player('RYPP-vp-'+that.data.player_uid, {
         // height: '390',
         // width: '640',
         playerVars: {
           // controls: 0,
           // showinfo: 0 ,
           // autoplay: 0,
+          html5: 1,
           enablejsapi: 1,
           rel: 0,
           modestbranding: 1,
@@ -158,7 +160,7 @@ var RYPP = (function($, undefined) {
         },
         events: {
           'onReady': function(){
-            console.log('new YTP ready');
+            console.log('new ytplayer ready');
             that.onPlayerReady();
           },
           'onStateChange': function(e){
@@ -173,10 +175,7 @@ var RYPP = (function($, undefined) {
 
     // Ready to play
     onPlayerReady: function() {
-      var that = this;
-      console.log('Player is supossed to be ready');
-      console.log(this.ytplayer);
-      that.startPlayList();
+      this.startPlayList();
     },
 
     // When video finish
@@ -230,8 +229,6 @@ var RYPP = (function($, undefined) {
       if (typeof page_token !== 'undefined') {
         url += '&pageToken=' + page_token;
       }
-
-      console.log(this.data.temp_vl.length);
 
       $.ajaxSetup ({cache: false});
       $.ajax(url, {
@@ -344,6 +341,7 @@ var RYPP = (function($, undefined) {
 
 // YOUTUBE API CALLBACK
 function onYouTubeIframeAPIReady() {
+  console.log( 'Youtube API script loaded. Start players.' );
   $('[data-rypp]').each(function(idx, el) {
     $(el)[0].rypp_data_obj.onYouTubeIframeAPIReady();
   });
