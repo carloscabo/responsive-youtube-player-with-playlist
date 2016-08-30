@@ -83,7 +83,7 @@ var RYPP = (function($, undefined) {
           hID = document.getElementsByTagName('head')[0];
         // Add youtube API in HEAD
         // tag.src = "https://www.youtube.com/iframe_api";
-        tag.src = 'https://www.youtube.com/player_api';
+        tag.src = 'https://www.youtube.com/iframe_api?version=3';
         hID.appendChild(tag);
       }
 
@@ -143,7 +143,8 @@ var RYPP = (function($, undefined) {
     addAPIPlayer: function() {
       var that = this;
 
-      this.ytplayer = new YT.Player('RYPP-vp-'+this.data.player_uid, {
+      window.YTConfig = { 'host': 'https://www.youtube.com' };
+      that.ytplayer = new YT.Player('RYPP-vp-'+that.data.player_uid, {
         // height: '390',
         // width: '640',
         playerVars: {
@@ -157,6 +158,7 @@ var RYPP = (function($, undefined) {
         },
         events: {
           'onReady': function(){
+            console.log('new YTP ready');
             that.onPlayerReady();
           },
           'onStateChange': function(e){
@@ -171,7 +173,10 @@ var RYPP = (function($, undefined) {
 
     // Ready to play
     onPlayerReady: function() {
-      this.startPlayList();
+      var that = this;
+      console.log('Player is supossed to be ready');
+      console.log(this.ytplayer);
+      that.startPlayList();
     },
 
     // When video finish
@@ -286,9 +291,9 @@ var RYPP = (function($, undefined) {
                   thu = item.snippet.thumbnails.default.url;
                 that.addVideo2Playlist(vid, tit, aut, thu);
               }
-            }
-            if ( $.isEmptyObject( that.data.temp_vl ) ) {
-              that.addAPIPlayer();
+              if ( $.isEmptyObject( that.data.temp_vl ) ) {
+                that.addAPIPlayer();
+              }
             }
           }
         }
