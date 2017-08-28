@@ -317,7 +317,7 @@ var RYPP = (function($, undefined) {
         that = this;
 
       // Click on playlist elemnts
-      D.$items.on('click touchstart', 'li', function(e) {
+      D.$items.on('click', 'li', function(e) {
         e.preventDefault();
         D.$items.find('li').removeClass('selected');
         $(this).addClass('selected');
