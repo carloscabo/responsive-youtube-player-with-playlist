@@ -1,5 +1,5 @@
 /*
-  Youtube Player with Playlist (v2.21)
+  Youtube Player with Playlist (v2.22)
   https://github.com/carloscabo/responsive-youtube-player-with-playlist
   by Carlos Cabo (@putuko)
 */
@@ -332,7 +332,9 @@ var RYPP = (function($, undefined) {
 
       // Select first if none
       if (D.$items.find('li.selected').length === 0) {
-        D.$items.find('li').first().click();
+        if ( this.options.autoplay ) {
+          D.$items.find('li').first().click();
+        }
       }
     },
 
