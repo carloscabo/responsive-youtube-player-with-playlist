@@ -1,11 +1,11 @@
-Responsive YouTube Player with Playlist (RYPP)
-==============================================
+Responsive YouTube Player with Playlist (RYPP) v2.22
+====================================================
 
 ![Screenshot](https://raw.githubusercontent.com/carloscabo/responsive-youtube-player-with-playlist/master/screenshot.png)
 
 **(RYPP)** Responsive YouTube Player with Playlist, title is self-explanatory ;-)
 
-[Demo](http://htmlpreview.github.io/?http://raw.githubusercontent.com/carloscabo/responsive-youtube-player-with-playlist/master/demo.html)
+[Demo](https://rawgit.com/carloscabo/responsive-youtube-player-with-playlist/master/index.html)
 
 ## Requirements
 
@@ -125,8 +125,11 @@ $('#RYPP-custom-player').rypp( '{{YOUR_API_KEY_HERE}}', {
 
 ## Changelog
 
+- 2017/09/28 v2.22 Several fixes
+  - Autoplay config param fixed
+  - Touchstart event on iOS Safari
 - 2016/08/30 v2.21 Fixing click behaviour in iOS
 - 2016/08/30 v2.20 Support for Playlists with +50 vídeos (beta)
 - 2016/06/16 v2.18 Solved infinite loading on some situations
-- 2016/06/08 v2.17 Fetch title / descriptions from palylist metadata
+- 2016/06/08 v2.17 Fetch title / descriptions from playlist metadata
 - 2016/05/18 v2.16 Disabling several mobile features causing troubles
