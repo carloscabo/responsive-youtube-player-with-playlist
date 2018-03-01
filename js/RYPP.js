@@ -27,7 +27,7 @@ var RYPP = (function($, undefined) {
         playlist_info: 'https://www.googleapis.com/youtube/v3/playlists?part=snippet&id={{RESOURCES_ID}}&key={{YOUR_API_KEY}}',
         playlist: 'https://www.googleapis.com/youtube/v3/playlistItems?part=snippet&maxResults=50&playlistId={{RESOURCES_ID}}&key={{YOUR_API_KEY}}',
         pl_ID: '',
-        videolist: 'https://www.googleapis.com/youtube/v3/videos?part=snippet,status&maxResults=50&id={{RESOURCES_ID}}&key={{YOUR_API_KEY}}',
+        videolist: 'https://www.googleapis.com/youtube/v3/videos?part=snippet,contentDetails,status&maxResults=50&id={{RESOURCES_ID}}&key={{YOUR_API_KEY}}',
       },
       temp_vl: [], // Temporary videolist
       firsttime: true,
@@ -54,6 +54,7 @@ var RYPP = (function($, undefined) {
         autonext: true,
         loop: true,
         mute: false,
+        playable_region: false,
         debug: false
       };
 
@@ -282,7 +283,7 @@ var RYPP = (function($, undefined) {
 
           } else if (data.kind === 'youtube#videoListResponse') {
 
-            // Videos froma  Videolist
+            // Videos from  Videolist
             for (var i = 0, len = data.items.length; i < len; i++) {
               var item = data.items[i];
 
@@ -291,12 +292,29 @@ var RYPP = (function($, undefined) {
                 $.inArray(item.status.uploadStatus, ['rejected', 'deleted', 'failed']) === -1 &&
                 typeof item.snippet.thumbnails !== 'undefined'
               ) {
-                var
-                  vid = item.id,
-                  tit = item.snippet.title,
-                  aut = item.snippet.channelTitle,
-                  thu = item.snippet.thumbnails.default.url;
-                that.addVideo2Playlist(vid, tit, aut, thu);
+                // Videos disallowed by regionRestrictions are not included in the player
+                if ( typeof this.options.playable_region === false ||
+                  ( typeof item.contentDetails.regionRestriction !== 'undefined' &&
+                    (
+                      (
+                        // The specified playable_region is allowed
+                        typeof item.contentDetails.regionRestriction.allowed !== 'undefined' &&
+                        $.inArray(this.options.playable_region, item.contentDetails.regionRestriction.allowed)
+                      ) || (
+                        // The specified playable_region is not blocked
+                        typeof item.contentDetails.regionRestriction.blocked !== 'undefined' &&
+                        $.inArray(this.options.playable_region, item.contentDetails.regionRestriction.blocked) === -1
+                      )
+                    )
+                  )
+                ) {
+                    var
+                      vid = item.id,
+                      tit = item.snippet.title,
+                      aut = item.snippet.channelTitle,
+                      thu = item.snippet.thumbnails.default.url;
+                    that.addVideo2Playlist(vid, tit, aut, thu);
+                }
               }
               if ( $.isEmptyObject( that.data.temp_vl ) ) {
                 this.startPlayList();
